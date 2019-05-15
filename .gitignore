@@ -1,0 +1,9 @@
+# Gitignore
+
+
+__pycache__
+
+*.png
+*.jpeg
+*.nc
+*.tif

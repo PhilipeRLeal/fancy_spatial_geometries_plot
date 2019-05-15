@@ -8,8 +8,6 @@ Created on Mon May  6 18:53:33 2019
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-
-import sys
 from matplotlib.ticker import MaxNLocator
 import cartopy.crs as ccrs
 import geopandas as gpd
@@ -18,8 +16,6 @@ import pandas as pd
 pd.set_option("display.max_rows",10000)
 pd.set_option('display.max_columns', 500)
 import matplotlib
-
-sys.path.insert(0,r'C:\Users\lealp\Dropbox\Profissao\Python\Cartopy\Formatting_plots')
 
 from gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
 
@@ -33,49 +29,191 @@ class geopandas_custom_plot(object):
     
     """
     
+	
     @ staticmethod
-    def add_colorbar_for_axes(geo_axes, gdf, 
-                              gdf_transform=None,
-                              n_ticks_in_colorbar=4, 
-                              round_float_value_colorbar_tickslabels=2, 
-                              cmap_name='plasma'):
+	
+    def add_colorbar_for_figure(fig, gdf,
+								column=None,
+								n_ticks_in_colorbar=4,
+								round_float_value_colorbar_tickslabels=2,
+								cmap='viridis',
+								n_colors_in_cmap=4,
+								colorbar_figure_spacing=[0.88, 0.12, 0.02, 0.75],
+								colorbar_title=None, 
+								expand_limits_of_colorbar=False):
 
-        cmap = getattr(mpl.cm, cmap_name)
+        '''
+        Parameters:
+			fig: the figure into which the colorbar will be inserted
+			
+			----------------------------------------------------------------------------------------------
+            
+			gdf: the geodataframe to be used for the colorbar creation
+			
+			----------------------------------------------------------------------------------------------
+            
+			column: the name of the column in the gdf to use for colorbar creation
+			
+			----------------------------------------------------------------------------------------------
+            
+			n_ticks_in_colorbar: number of ticks to be visible in the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			round_float_value_colorbar_tickslabels: the resolution after the decimal separator to be applied
+			
+			----------------------------------------------------------------------------------------------
+            
+			cmap: cmap: the cmap name to be used in the colorbar. The function also accepts a matplotlib.colors.ListedColormap instance, instead of a cmap name.
+			
+			----------------------------------------------------------------------------------------------
+            
+			colorbar_figure_spacing: the position of the colorbar in the figure
+				[xmin, ymin, width, height]
+			
+			----------------------------------------------------------------------------------------------
+            
+			colorbar_title: title for the colorbar if required
+			
+			----------------------------------------------------------------------------------------------
+            
+			expand_limits_of_colorbar: (bool) whether or not to expand the colorbar limits. IF True, then the colorbar minimum and maximum limits will be expanded based on the steps gererated by the np.linspace between gdf.column.min() and gdf.column.max()
         
-        if gdf_transform==None:
-            gdf_transform=geo_axes.transAxes
+			----------------------------------------------------------------------------------------------
+			----------------------------------------------------------------------------------------------
+            
+		Returns:
+			colorbar instance
+        '''		
+		
+		
+        if isinstance(cmap, str):
         
-        Vmin = gdf.min()
-        Vmax = gdf.max()
+            cmap = plt.cm.get_cmap(cmap , n_colors_in_cmap)     
+
+        elif isinstance(cmap, matplotlib.colors.ListedColormap):
+            cmap = cmap
+        
+        else:
+            cmap = getattr(mpl.cm, cmap)
+        
+        
+        Vmin = gdf[column].min()
+        Vmax = gdf[column].max()
         
         Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
         Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
         
-        sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin-(step/2),vmax=Vmax+(step/2)))
+        if expand_limits_of_colorbar==True:
+		
+            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin-(step/2),vmax=Vmax+(step/2)))
+        else:
+            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
+
+        cax = fig.add_axes(colorbar_figure_spacing)
+        sm._A = []
+        cbar = fig.colorbar(sm, cax=cax)
+        cbar.ax.set_title(colorbar_title)
+		
+        return cbar
+	
+    @ staticmethod
+    def add_colorbar_for_axes(geo_axes, gdf, 
+                              column=None,
+                              n_ticks_in_colorbar=4, 
+                              round_float_value_colorbar_tickslabels=2, 
+                              cmap='viridis',
+							  n_colors_in_cmap=500,
+							  colorbar_title=None, 
+							  expand_limits_of_colorbar=False):
+
+
+        '''
+		Parameters:
+		
+		
+            geo_axes: the geo_axes into which space will be drawn for fixing the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			column: the dataframe (or geodataframe) column from which the colors will be derived for the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			n_ticks_in_colorbar: sets the number of ticks to be plotted in the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			round_float_value_colorbar_tickslabels: the resolution after the decimal separator to be applied
+			
+			----------------------------------------------------------------------------------------------
+            
+			cmap: the cmap name to be used in the colorbar. The function also accepts a matplotlib.colors.ListedColormap instance, instead of a cmap name.
+			
+			----------------------------------------------------------------------------------------------
+            
+			n_colors_in_cmap: number of colors (discrete intervals) to be used in the colorbar. Only applicable for cmap str instance 
+			
+				i.e.: cmap='viridis'
+						n_colors_in_cmap = 4
+						
+			
+			----------------------------------------------------------------------------------------------
+            
+			colorbar_title: title for the colorbar if required
+			
+			----------------------------------------------------------------------------------------------
+            
+			expand_limits_of_colorbar: (bool) whether or not to expand the colorbar limits. IF True, then the colorbar minimum and maximum limits will be expanded based on the steps gererated by the np.linspace between gdf.column.min() and gdf.column.max()
+			
+			----------------------------------------------------------------------------------------------
+			----------------------------------------------------------------------------------------------
+            
+			
+		Returns:
+			colorbar instance
+			
+		
+        '''
+		
+        if isinstance(cmap, str):
+        
+            cmap = plt.cm.get_cmap(cmap , n_colors_in_cmap)     
+
+        elif isinstance(cmap, matplotlib.colors.ListedColormap):
+            cmap = cmap
+        
+        else:
+            cmap = getattr(mpl.cm, cmap)
+        
+        
+        Vmin = gdf[column].min()
+        Vmax = gdf[column].max()
+        
+        Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
+        Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
+        
+		
+        if expand_limits_of_colorbar==True:
+		
+            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin-(step/2),vmax=Vmax+(step/2)))
+        else:
+            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
     
         sm._A = []
-        
-        
-        
-      
-        gdf.plot(ax=geo_axes,
-                 column='Prevalencias_relativas_%', 
-                 legend=False,
-                 cmap=cmap,
-                 transform=gdf_transform,
-                 vmin=Vmin, vmax=Vmax,
-                 label=False)
-        
-        geo_axes.set_aspect('equal')
-        geo_axes.grid()
         
         fig=geo_axes.get_figure()
         
         cbar = fig.colorbar(sm, ax=geo_axes, ticks=Ticks_list)   
     
         cbar.set_ticklabels(Ticks_list)
-        
-        return {'axes':geo_axes, 'cbar':cbar}
+		
+        try:
+            cbar.ax.set_title(colorbar_title)
+        except:
+            None
+			
+        return cbar
     
     
     
@@ -159,6 +297,10 @@ class geopandas_custom_plot(object):
            This is the fancy plotting function.
             
            It receives several parameters so to properly generate a given fancy cartopy plot.
+		   
+		   Returns: (dict)
+		   
+				{'axes':geo_axes, 'gridliner':gl}
            
            Paramters:
                
@@ -306,7 +448,9 @@ class geopandas_custom_plot(object):
         # reprojetando dados para o CRS do mapa
         gdf = gdf.to_crs(geo_axes_projection.proj4_init)
         
-        
+        xmin, ymin, xmax, ymax = gdf.total_bounds
+		
+        geo_axes.set_extent((xmin, xmax, ymin, ymax), crs=geo_axes_projection)
         # pegando o sistema de cores desejado:
         
         
@@ -358,9 +502,24 @@ class geopandas_custom_plot(object):
             print("Colorbar is set")
         
         
-        gl = geo_axes.gridlines(crs=geo_axes_projection, **gridline_attr) # axes projection here too
         
         
+        
+        X = np.linspace(geo_extent[0], geo_extent[1], n_coordinate_ticks['x_number'], endpoint=True)
+        
+        geo_axes.set_xticks(X, crs=ccrs.PlateCarree())
+        #gl.xlocator = mticker.FixedLocator(X)
+        
+        
+        Y = np.linspace(geo_extent[2], geo_extent[3], n_coordinate_ticks['y_number'], endpoint=True)
+        
+        geo_axes.set_yticks(Y, crs=ccrs.PlateCarree())
+        
+        
+        gl = geo_axes.gridlines(crs=geo_axes_projection, xlocs=X, 
+								ylocs=Y, **gridline_attr) # axes projection here too
+        
+		
         ## Better set to no standard labeling so to avoid possible overlay of custom and standard labels in geo_axes
         
         
@@ -375,19 +534,6 @@ class geopandas_custom_plot(object):
         gl.ylabels_left = tick_axis_positions['ylabels_left']
         gl.ylabels_right= tick_axis_positions['ylabels_right']
         gl.xlabels_bottom = tick_axis_positions['xlabels_bottom']
-        
-        
-        
-        X = np.linspace(geo_extent[0], geo_extent[1], n_coordinate_ticks['x_number'], endpoint=True)
-        
-        geo_axes.set_xticks(X, crs=ccrs.PlateCarree())
-        #gl.xlocator = mticker.FixedLocator(X)
-        
-        
-        Y = np.linspace(geo_extent[2], geo_extent[3], n_coordinate_ticks['y_number'], endpoint=True)
-        
-        geo_axes.set_yticks(Y, crs=ccrs.PlateCarree())
-        
         
         
         #gl.ylocator = mticker.FixedLocator(Y)
@@ -412,11 +558,7 @@ class geopandas_custom_plot(object):
                                            west_hemisphere_str=west_hemisphere_str,
                                            east_hemisphere_str=east_hemisphere_str,
                                            dateline_direction_label=dateline_direction_label)
-        
-        
-        
-        
-        
+
         
         latitude_tick_formating={'number_format':'.2f', # com duas casas decimais
                                  'degree_symbol':'°',
@@ -672,7 +814,11 @@ class geopandas_custom_plot(object):
             width=0.05: the width of the arrows head
             transform: the transform that wil be used to set the position of the arrow in the figure/axes
             (standard): None == fig.transFigure
-            
+        
+
+		Returns:
+		
+			geo_axes
             
         """
         
