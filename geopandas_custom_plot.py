@@ -40,6 +40,8 @@ class geopandas_custom_plot(object):
 								n_colors_in_cmap=4,
 								colorbar_figure_spacing=[0.88, 0.12, 0.02, 0.75],
 								colorbar_title=None, 
+								colorbar_title_fontsize=7,
+								colorbar_tick_fontsize=7,
 								expand_limits_of_colorbar=False):
 
         '''
@@ -74,6 +76,14 @@ class geopandas_custom_plot(object):
 			----------------------------------------------------------------------------------------------
             
 			colorbar_title: title for the colorbar if required
+			
+			----------------------------------------------------------------------------------------------
+            			
+			colorbar_title_fontsize: the fontsize of the colorbar title
+			
+			----------------------------------------------------------------------------------------------
+            
+			colorbar_tick_fontsize: the fontsize of the ticklabels of the colorbar
 			
 			----------------------------------------------------------------------------------------------
             
@@ -113,7 +123,12 @@ class geopandas_custom_plot(object):
         cax = fig.add_axes(colorbar_figure_spacing)
         sm._A = []
         cbar = fig.colorbar(sm, cax=cax)
-        cbar.ax.set_title(colorbar_title)
+		
+        for l in cbar.ax.yaxis.get_ticklabels():
+            #l.set_family("Times New Roman")
+            l.set_size(colorbar_tick_fontsize)
+			
+        cbar.ax.set_title(colorbar_title, fontsize=colorbar_title_fontsize)
 		
         return cbar
 	
@@ -125,6 +140,8 @@ class geopandas_custom_plot(object):
                               cmap='viridis',
 							  n_colors_in_cmap=500,
 							  colorbar_title=None, 
+							  colorbar_title_fontsize=7,
+							  colorbar_tick_fontsize=7,
 							  expand_limits_of_colorbar=False):
 
 
@@ -161,6 +178,14 @@ class geopandas_custom_plot(object):
 			----------------------------------------------------------------------------------------------
             
 			colorbar_title: title for the colorbar if required
+			
+			----------------------------------------------------------------------------------------------
+            			
+			colorbar_title_fontsize: the fontsize of the colorbar title
+			
+			----------------------------------------------------------------------------------------------
+            
+			colorbar_tick_fontsize: the fontsize of the ticklabels of the colorbar
 			
 			----------------------------------------------------------------------------------------------
             
@@ -208,10 +233,9 @@ class geopandas_custom_plot(object):
     
         cbar.set_ticklabels(Ticks_list)
 		
-        try:
-            cbar.ax.set_title(colorbar_title)
-        except:
-            None
+        cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
+			
+        cbar.ax.set_title(colorbar_title, fontsize=colorbar_title_fontsize)
 			
         return cbar
     
