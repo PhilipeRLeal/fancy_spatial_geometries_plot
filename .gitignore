@@ -7,3 +7,8 @@ __pycache__
 *.jpeg
 *.nc
 *.tif
+*.shp
+*.dbf
+*.prj
+*.qpj
+*.shx
