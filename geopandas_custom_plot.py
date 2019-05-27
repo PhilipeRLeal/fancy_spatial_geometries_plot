@@ -89,7 +89,7 @@ class geopandas_custom_plot(object):
                               cmap='viridis',
                               alpha=1,
 							  n_colors_in_cmap=None,
-							  colorbar_tick_fontsize=7):
+							  colorbar_tick_fontsize=7, decimal_separator=','):
 
 
         '''
@@ -161,7 +161,9 @@ class geopandas_custom_plot(object):
         
          
         cbar = fig.colorbar(sm, ax=geo_axes, ticks=Ticks_list, shrink=shrink, pad=pad)   
-    
+        
+        Ticks_list = [str(tick).replace('.', decimal_separator) for tick in Ticks_list]
+        
         cbar.set_ticklabels(Ticks_list)
 		
         cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
@@ -950,7 +952,7 @@ class geopandas_custom_plot(object):
     
     
     @ staticmethod
-    def add_scale_bar(geo_axes, length=200, unit='km', location=(1.2, 0.02), linewidth=2.5):
+    def add_scale_bar(geo_axes, length=200, unit='km', location=(1.22, 0.001), linewidth=2.5):
         """
         Function that adds scale bar to an geoaxes
         
@@ -1015,6 +1017,7 @@ class geopandas_custom_plot(object):
             def scale_number(x):
                 if str(x)[0] in ['1', '2', '5']: return int(x)		
                 else: return scale_number(x - 10 ** ndim)
+            
             length = scale_number(length) 
 
 		#Generate the x coordinate for the ends of the scalebar
