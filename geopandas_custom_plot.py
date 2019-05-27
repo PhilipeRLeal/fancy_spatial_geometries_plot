@@ -17,7 +17,12 @@ pd.set_option("display.max_rows",10000)
 pd.set_option('display.max_columns', 500)
 import matplotlib
 
-from gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
+
+try:
+    from .gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
+    
+except:
+    from gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
 
 class geopandas_custom_plot(object):
     """
@@ -28,121 +33,63 @@ class geopandas_custom_plot(object):
     Use it freely.
     
     """
-    
-	
+   
+        
     @ staticmethod
-	
-    def add_colorbar_for_figure(fig, gdf,
-								column=None,
-								n_ticks_in_colorbar=4,
-								round_float_value_colorbar_tickslabels=2,
-								cmap='viridis',
-								n_colors_in_cmap=4,
-								colorbar_figure_spacing=[0.88, 0.12, 0.02, 0.75],
-								colorbar_title=None, 
-								colorbar_title_fontsize=7,
-								colorbar_tick_fontsize=7,
-								expand_limits_of_colorbar=False):
+    
+    
+    def change_gridliner_tick_decimal_separator(Gridliner, gridline_tick_formating='.2f', axis='y'):  
+        
+        def get_t(text):
+        
+            new_t = "{0:{1}}".format(text,gridline_tick_formating).replace('.',',')
+            
+            return new_t 
+        
+        def transform_axis_ticks(axis_get_Ticks, axis_set_ticks):
+        
+            
+            XTexts = [get_t(t) for t in axis_get_Ticks()]      
+            
+            axis_set_ticks(XTexts)
+        
+        if axis.lower()=='y':
+            
+            Yaxis_get_Ticks = getattr(Gridliner.axes, 'get_yticks')
+            Yaxis_set_Ticks = getattr(Gridliner.axes, 'set_yticklabels')
+            
+            transform_axis_ticks(Yaxis_get_Ticks, Yaxis_set_Ticks)    
+            
+            
+        elif axis.lower()=='x':    
+            Xaxis_get_Ticks = getattr(Gridliner.axes, 'get_xticks')
+            Xaxis_set_Ticks = getattr(Gridliner.axes, 'set_xticklabels')
+            
+            
+            transform_axis_ticks(Xaxis_get_Ticks, Xaxis_set_Ticks)    
+        
 
-        '''
-        Parameters:
-			fig: the figure into which the colorbar will be inserted
-			
-			----------------------------------------------------------------------------------------------
+        else: # or axis.lower()=='both':
             
-			gdf: the geodataframe to be used for the colorbar creation
-			
-			----------------------------------------------------------------------------------------------
-            
-			column: the name of the column in the gdf to use for colorbar creation
-			
-			----------------------------------------------------------------------------------------------
-            
-			n_ticks_in_colorbar: number of ticks to be visible in the colorbar
-			
-			----------------------------------------------------------------------------------------------
-            
-			round_float_value_colorbar_tickslabels: the resolution after the decimal separator to be applied
-			
-			----------------------------------------------------------------------------------------------
-            
-			cmap: cmap: the cmap name to be used in the colorbar. The function also accepts a matplotlib.colors.ListedColormap instance, instead of a cmap name.
-			
-			----------------------------------------------------------------------------------------------
-            
-			colorbar_figure_spacing: the position of the colorbar in the figure
-				[xmin, ymin, width, height]
-			
-			----------------------------------------------------------------------------------------------
-            
-			colorbar_title: title for the colorbar if required
-			
-			----------------------------------------------------------------------------------------------
-            			
-			colorbar_title_fontsize: the fontsize of the colorbar title
-			
-			----------------------------------------------------------------------------------------------
-            
-			colorbar_tick_fontsize: the fontsize of the ticklabels of the colorbar
-			
-			----------------------------------------------------------------------------------------------
-            
-			expand_limits_of_colorbar: (bool) whether or not to expand the colorbar limits. IF True, then the colorbar minimum and maximum limits will be expanded based on the steps gererated by the np.linspace between gdf.column.min() and gdf.column.max()
+            transform_axis_ticks(Yaxis_get_Ticks, Yaxis_set_Ticks) 
+            transform_axis_ticks(Xaxis_get_Ticks, Xaxis_set_Ticks)  
         
-			----------------------------------------------------------------------------------------------
-			----------------------------------------------------------------------------------------------
-            
-		Returns:
-			colorbar instance
-        '''		
-		
-		
-        if isinstance(cmap, str):
         
-            cmap = plt.cm.get_cmap(cmap , n_colors_in_cmap)     
+        return Gridliner
 
-        elif isinstance(cmap, matplotlib.colors.ListedColormap):
-            cmap = cmap
-        
-        else:
-            cmap = getattr(mpl.cm, cmap)
-        
-        
-        Vmin = gdf[column].min()
-        Vmax = gdf[column].max()
-        
-        Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
-        Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
-        
-        if expand_limits_of_colorbar==True:
-		
-            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin-(step/2),vmax=Vmax+(step/2)))
-        else:
-            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
-
-        cax = fig.add_axes(colorbar_figure_spacing)
-        sm._A = []
-        cbar = fig.colorbar(sm, cax=cax)
-		
-        for l in cbar.ax.yaxis.get_ticklabels():
-            #l.set_family("Times New Roman")
-            l.set_size(colorbar_tick_fontsize)
-			
-        cbar.ax.set_title(colorbar_title, fontsize=colorbar_title_fontsize)
-		
-        return cbar
-	
+    
+    
+    
     @ staticmethod
     def add_colorbar_for_axes(geo_axes, gdf, 
                               column=None,
                               n_ticks_in_colorbar=4, 
+                              shrink=0.95, pad=0.02,
                               round_float_value_colorbar_tickslabels=2, 
                               cmap='viridis',
-							  n_colors_in_cmap=500,
-							  colorbar_title=None, 
-							  colorbar_title_fontsize=7,
-							  colorbar_tick_fontsize=7,
-							  expand_limits_of_colorbar=False):
+                              alpha=1,
+							  n_colors_in_cmap=None,
+							  colorbar_tick_fontsize=7):
 
 
         '''
@@ -177,23 +124,11 @@ class geopandas_custom_plot(object):
 			
 			----------------------------------------------------------------------------------------------
             
-			colorbar_title: title for the colorbar if required
-			
-			----------------------------------------------------------------------------------------------
-            			
-			colorbar_title_fontsize: the fontsize of the colorbar title
-			
-			----------------------------------------------------------------------------------------------
-            
 			colorbar_tick_fontsize: the fontsize of the ticklabels of the colorbar
 			
 			----------------------------------------------------------------------------------------------
             
-			expand_limits_of_colorbar: (bool) whether or not to expand the colorbar limits. IF True, then the colorbar minimum and maximum limits will be expanded based on the steps gererated by the np.linspace between gdf.column.min() and gdf.column.max()
 			
-			----------------------------------------------------------------------------------------------
-			----------------------------------------------------------------------------------------------
-            
 			
 		Returns:
 			colorbar instance
@@ -217,26 +152,21 @@ class geopandas_custom_plot(object):
         
         Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
         Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
-        
-		
-        if expand_limits_of_colorbar==True:
-		
-            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin-(step/2),vmax=Vmax+(step/2)))
-        else:
-            sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
+
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
     
         sm._A = []
         
         fig=geo_axes.get_figure()
         
-        cbar = fig.colorbar(sm, ax=geo_axes, ticks=Ticks_list)   
+         
+        cbar = fig.colorbar(sm, ax=geo_axes, ticks=Ticks_list, shrink=shrink, pad=pad)   
     
         cbar.set_ticklabels(Ticks_list)
 		
         cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
 			
-        cbar.ax.set_title(colorbar_title, fontsize=colorbar_title_fontsize)
-			
+
         return cbar
     
     
@@ -268,7 +198,7 @@ class geopandas_custom_plot(object):
                                              'fancybox':True,
                                              'facecolor':'k',
                                              'edgecolor':'k',
-                                             'title':'legend title',
+                                             'title':'HAV',
                                              'title_fontsize':12,
                                              'borderpad':12,
                                              'borderaxespad':10
@@ -396,7 +326,6 @@ class geopandas_custom_plot(object):
                 
                 ----------------------------------------------------------------------------------------------
                 
-
                  
                 n_coordinate_ticks= {'x_number': (int),  'y_number': (int)}:
                     
@@ -435,7 +364,6 @@ class geopandas_custom_plot(object):
                 gridline_attr: (dictionary). Dictionary containing text parameters for the gridline styling, 
                     
                     i.e:
-
                                              
                     gridline_attr=dict(linewidth=1,                 # sets the width of the lines in the gridlines
                                                 color='black',      # sets the color of the lines in the gridlines
@@ -493,13 +421,14 @@ class geopandas_custom_plot(object):
             
              cmapper = None
         
+        
         # transform: always plot gdf in the projection of the map (better safe to be sorry!)
         
         
         gdf.plot(ax=geo_axes, 
                  cmap=cmapper,
                  
-                 **gdf_plot_kw) # map crs here
+                 **gdf_plot_kw) 
         
        
         # getting extent
@@ -524,9 +453,6 @@ class geopandas_custom_plot(object):
             fig.colorbar(mappable=artist, cax=cax)
             
             print("Colorbar is set")
-        
-        
-        
         
         
         X = np.linspace(geo_extent[0], geo_extent[1], n_coordinate_ticks['x_number'], endpoint=True)
@@ -633,10 +559,158 @@ class geopandas_custom_plot(object):
                                         tick_color='k',)
         
         
+        
+        geopandas_custom_plot.change_gridliner_tick_decimal_separator(gl, gridline_tick_formating['latitude_tick_formating']['number_format'], axis='y')
+        
+        geopandas_custom_plot.change_gridliner_tick_decimal_separator(gl, gridline_tick_formating['longitude_tick_formating']['number_format'], axis='x')
+        
+
         return {'axes':geo_axes, 'gridliner':gl}
     
+    @ staticmethod
     
+    def add_custom_gridline(geo_axes, 
+                            
+                            gridline_attr=dict(linewidth=1, 
+                                            color='black', 
+                                            alpha=0.35, 
+                                            linestyle='--', 
+                                            draw_labels=True),
+                                               
+                            n_coordinate_ticks={'x_number':3,  'y_number':3},
+                            
+                            gridline_tick_formating=dict(latitude_tick_formating={'number_format':'.1f', # com duas casas decimais
+                                                                      'degree_symbol':'°', # u'\u00B0'
+                                                                      'north_hemisphere_str': 'N',
+                                                                      'south_hemisphere_str': 'S'} ,
+                                                               
+        
+                                                      longitude_tick_formating={'number_format':'.2f', # com duas casas decimais
+                                                                       'degree_symbol':'°', # u'\u00B0'
+                                                                       'dateline_direction_label':True, # ONLY APPLICABLE TO LONGITUDE DATA
+                                                                       'west_hemisphere_str': 'O',
+                                                                       'east_hemisphere_str': 'L'}) ,
+                            
+                             gridline_xlabel_style = {'color': 'black', 
+                                                       #'weight': 'bold', 
+                                                       'rotation':90,
+                                                       'fontsize':12},
+                         
+                            gridline_ylabel_style = {'color': 'black', 
+                                                   #'weight': 'bold', 
+                                                   'rotation':0,
+                                                   'fontsize':18},       
+                            
+                            ):
+        
+        
+        geo_extent = geo_axes.get_extent()
+        
+        X = np.linspace(geo_extent[0], geo_extent[1], n_coordinate_ticks['x_number'], endpoint=True)
+        
+        geo_axes.set_xticks(X, crs=ccrs.PlateCarree())
+        #gl.xlocator = mticker.FixedLocator(X)
+        
+        
+        Y = np.linspace(geo_extent[2], geo_extent[3], n_coordinate_ticks['y_number'], endpoint=True)
+        
+        geo_axes.set_yticks(Y, crs=ccrs.PlateCarree())
+        
+        
+        gl = geo_axes.gridlines(crs=geo_axes.projection, xlocs=X, 
+								ylocs=Y, **gridline_attr) # axes projection here too
+        
+		
+        ## Better set to no standard labeling so to avoid possible overlay of custom and standard labels in geo_axes
+        
+        
+        tick_axis_positions={'xlabels_top':False,
+                             'ylabels_left':False,
+                             'ylabels_right':False,
+                             'xlabels_bottom':False}
+        
+        
+
+        gl.xlabels_top = tick_axis_positions['xlabels_top']
+        gl.ylabels_left = tick_axis_positions['ylabels_left']
+        gl.ylabels_right= tick_axis_positions['ylabels_right']
+        gl.xlabels_bottom = tick_axis_positions['xlabels_bottom']
+        
+        
+        #gl.ylocator = mticker.FixedLocator(Y)
+        # Formater do gridline
+        
+        
+        
+        
+        longitude_tick_formating = gridline_tick_formating['longitude_tick_formating']
+        
+ 
+        
+        number_format = longitude_tick_formating.get('number_format', '.2f')
+        west_hemisphere_str = longitude_tick_formating.get('west_hemisphere_str', 'O')  
+        east_hemisphere_str = longitude_tick_formating.get('east_hemisphere_str', 'L')  
+        degree_symbol = longitude_tick_formating.get('degree_symbol', '')
+        dateline_direction_label = longitude_tick_formating.get('dateline_direction_label', False)
+        
+        
+        lon_formatter = LongitudeFormatter(number_format=number_format,
+                                           degree_symbol=degree_symbol,
+                                           west_hemisphere_str=west_hemisphere_str,
+                                           east_hemisphere_str=east_hemisphere_str,
+                                           dateline_direction_label=dateline_direction_label)
+
+        
+        latitude_tick_formating={'number_format':'.2f', # com duas casas decimais
+                                 'degree_symbol':'°',
+                                 'north_hemisphere_str':'N'}
+        
+        latitude_tick_formating = gridline_tick_formating['latitude_tick_formating']
+        
+        number_format = latitude_tick_formating.get('number_format', '.2f')
+
+        north_hemisphere_str = latitude_tick_formating.get('north_hemisphere_str', 'N')  
+        south_hemisphere_str = latitude_tick_formating.get('south_hemisphere_str', 'S')  
+        degree_symbol = latitude_tick_formating.get('degree_symbol', '')
+        
+        
+        lat_formatter = LatitudeFormatter(number_format=number_format,
+                                          degree_symbol=degree_symbol,
+                                          north_hemisphere_str=north_hemisphere_str,
+                                          south_hemisphere_str=south_hemisphere_str)
     
+        geo_axes.xaxis.set_major_formatter(lon_formatter)
+        geo_axes.yaxis.set_major_formatter(lat_formatter)
+        
+       
+        gl.xlabel_style = gridline_xlabel_style
+        gl.ylabel_style = gridline_ylabel_style
+        
+        
+        
+        
+        geopandas_custom_plot._set_ticks(ax=geo_axes, 
+                                        axis='x', 
+                                        which='major', 
+                                        labelpad=5, 
+                                        labelrotation=90, 
+                                        ticksize=2, 
+                                        labelsize=6,
+                                        labelcolor='k',
+                                        tick_color='k',)
+        
+        
+        geopandas_custom_plot._set_ticks(ax=geo_axes, axis='y', 
+                                        which='major', 
+                                        labelpad=5, 
+                                        labelrotation=0, 
+                                        ticksize=2, 
+                                        labelsize=6,
+                                        labelcolor='k',
+                                        tick_color='k',)
+        
+        
+        return geo_axes, gl
     
     #####################################################################
     
@@ -978,6 +1052,7 @@ class geopandas_custom_plot(object):
     #####################################################################
     
 
+
 if '__main__' ==__name__:
         
     
@@ -986,7 +1061,7 @@ if '__main__' ==__name__:
     
     SHP = gpd.read_file(SHP_path)
     
-    
+    SHP['CD_GEOCMU'] = SHP['CD_GEOCMU'].apply(int)
     
     
     projection = ccrs.PlateCarree() # projection.proj4_init
@@ -994,6 +1069,7 @@ if '__main__' ==__name__:
     Transform = ccrs.Geodetic(globe=ccrs.Globe(ellipse='GRS80'))
     
     fig, ax = plt.subplots(1, subplot_kw={'projection':projection})
+    
     
     
     
@@ -1036,16 +1112,19 @@ if '__main__' ==__name__:
                 n_coordinate_ticks={'x_number':9,  'y_number':5},
                 )
                  
-         
+                 
     ax, Text = geopandas_custom_plot.add_scale_bar(geo_axes=ax)
     
     ax = geopandas_custom_plot.add_north_Arrow(geo_axes=ax, transform=fig.transFigure)
+    geopandas_custom_plot.add_colorbar_for_axes(ax, SHP, column='CD_GEOCMU', n_ticks_in_colorbar=10)
+    
     
     fig.subplots_adjust(top=0.88,
-bottom=0.18,
-left=0.11,
-right=0.9,
-hspace=0.2,
-wspace=0.2)
-    
+                        bottom=0.18,
+                        left=0.11,
+                        right=0.9,
+                        hspace=0.2,
+                        wspace=0.2)
+                            
     fig.show()
+    
