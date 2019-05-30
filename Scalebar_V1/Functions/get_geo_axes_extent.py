@@ -12,26 +12,35 @@ Created on Thu May 30 14:49:20 2019
 
 def get_distance(ax, x_size_in_data_units, rounding_value_for_xsize=0, length_unit='Km', unit_transformation_function=None):
     """
-    ax is the axes to draw the scalebar on.
-    x_size_in_data_units: it is size of the scalebar in Data transform coordinates.
     
-    rounding_value_for_xsize: it is the rounding value (number of decimal cases) to be used in the transformed \
-                              scalebar size and legend
+    Function description:
+        This function receives the distance in degrees (using PlateCarree CRS) and returns in planar units the required distance.
+        
+    Parameters:
     
-    length_unit (string): The distance unit measurement that will be used in the scalebar. Available options: ['m', 'Km']
-            If other distance unit measurement is provided (ex: miles), one must add a transformation function from meters \
-            to the required unit in the attr: "unit_transformation_function"
+        ax is the axes to draw the scalebar on.
+        x_size_in_data_units: it is size of the scalebar in Data transform coordinates.
+        
+        rounding_value_for_xsize: it is the rounding value (number of decimal cases) to be used in the transformed \
+                                  scalebar size and legend
+        
+        length_unit (string): The distance unit measurement that will be used in the scalebar. Available options: ['m', 'Km']
+                If other distance unit measurement is provided (ex: miles), one must add a transformation function from meters \
+                to the required unit in the attr: "unit_transformation_function"
+                
+                Standard: 'Km'
             
-            Standard: 'Km'
-        
-    unit_transformation_function: the function to convert the scale unit into the desired distance measurement unit, 
-        in case that measurement unit is not "km" or 'm'. This passed function must convert meters to the desired unit, 
-        and return the converted value in the desired unit.
-
-        Example of converting a meter to mile: unit_transformation_function = lambda x: x*0,00062137
-
-        Standard: None (so that no transformation is applied)
-        
+        unit_transformation_function: the function to convert the scale unit into the desired distance measurement unit, 
+            in case that measurement unit is not "km" or 'm'. This passed function must convert meters to the desired unit, 
+            and return the converted value in the desired unit.
+    
+            Example of converting a meter to mile: unit_transformation_function = lambda x: x*0,00062137
+    
+            Standard: None (so that no transformation is applied)
+    
+    Returns: 
+        distance value (float or int)
+    
     """
         
     try:

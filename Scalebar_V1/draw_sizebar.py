@@ -12,6 +12,7 @@ Created on Thu May 30 15:36:26 2019
 def draw_sizebar(ax, 
                  x_size_in_data_units=3, 
                  rounding_value_for_xsize = 0,
+                 decimal_separator = '.',
                  bar_height=0.015, 
                  fill_bar=True, 
                  fill_bar_color='k', 
@@ -56,6 +57,11 @@ def draw_sizebar(ax,
         --------------------------------------------------------------------------------------------------------------    
         
         rounding_value_for_xsize: the rounding decimal cases to be used in the scalebar label.
+        
+        --------------------------------------------------------------------------------------------------------------    
+                
+        decimal_separator: it alters the decimal separator from the legend of the scalebar.
+            Standard = '.'
         
         --------------------------------------------------------------------------------------------------------------    
         
@@ -243,11 +249,11 @@ def draw_sizebar(ax,
                           color=fill_bar_color,
                           size=x_size_in_data_units,
                           size_vertical=bar_height,
-                          label='{0} {1}'.format(get_distance(ax = ax, 
+                          label='{0} {1}'.format(str(get_distance(ax = ax, 
                                                               x_size_in_data_units = x_size_in_data_units, 
                                                               rounding_value_for_xsize = rounding_value_for_xsize,
                                                               length_unit = length_unit, 
-                                                              unit_transformation_function = unit_transformation_function), 
+                                                              unit_transformation_function = unit_transformation_function)).replace('.',decimal_separator), 
                                                  length_unit),
                           label_top=label_top,
                           pad=pad, 
@@ -303,18 +309,20 @@ if "__main__" == __name__:
     
     Para.plot(ax=ax, transform=Projection)
 
-    draw_sizebar(ax, x0=0.82, y0=0.2, x1=1, y1=0.5, sep=2, pad=.5, 
-                                     borderpad=0, x_size_in_data_units=3, 
-                                     loc='center left',
-                                     background_xpadding=0.25,
-                                     background_ypadding=0.2,
-                                     add_background_to_scalebar=True,
-                                     fill_bar_color='k',
-                                     face_alpha=0.1,
-                                     background_edgecolor = 'k',
-                                     background_linewidth=1,
-                                     length_unit='km',
-                                     unit_transformation_function=None)
+    draw_sizebar(ax, rounding_value_for_xsize=2,
+                 decimal_separator=',',
+                 x0=0.82, y0=0.2, x1=1, y1=0.5, sep=2, pad=.5, 
+                 borderpad=0, x_size_in_data_units=3, 
+                 loc='center left',
+                 background_xpadding=0.25,
+                 background_ypadding=0.2,
+                 add_background_to_scalebar=True,
+                 fill_bar_color='k',
+                 face_alpha=0.1,
+                 background_edgecolor = 'k',
+                 background_linewidth=1,
+                 length_unit='km',
+                 unit_transformation_function=None)
 
     Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
 
