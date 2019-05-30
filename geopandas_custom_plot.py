@@ -18,13 +18,13 @@ pd.set_option('display.max_columns', 500)
 import matplotlib
 
 
-try:
-    from .gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
-    
-except:
-    from gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
+from Gridline_tick_formatting.gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
+ 
 
-class geopandas_custom_plot(object):
+from Scalebar_V1.draw_sizebar import draw_sizebar
+
+
+class geopandas_custom_plot():
     """
     This is a class that contains several staticmethods for fancy plotting using cartopy.
     
@@ -33,8 +33,14 @@ class geopandas_custom_plot(object):
     Use it freely.
     
     """
-   
+    
+    
         
+    
+    draw_sizebar = draw_sizebar
+
+    
+
     @ staticmethod
     
     
@@ -1116,11 +1122,38 @@ if '__main__' ==__name__:
                 )
                  
                  
-    ax, Text = geopandas_custom_plot.add_scale_bar(geo_axes=ax)
+    #ax, Text = geopandas_custom_plot.add_scale_bar(geo_axes=ax)
     
-    ax = geopandas_custom_plot.add_north_Arrow(geo_axes=ax, transform=fig.transFigure)
-    geopandas_custom_plot.add_colorbar_for_axes(ax, SHP, column='CD_GEOCMU', n_ticks_in_colorbar=10)
+    ax = geopandas_custom_plot.add_north_Arrow(geo_axes=ax, transform=fig.transFigure, x_tail=0.1, x_head=0.1)
+    geopandas_custom_plot.add_colorbar_for_axes(ax, SHP, column='CD_GEOCMU', n_ticks_in_colorbar=5)
     
+    
+    geopandas_custom_plot.draw_sizebar(ax,
+                                       x_size_in_data_units=2, 
+                                         rounding_value_for_xsize = 0,
+                                         bar_height=0.015, 
+                                         fill_bar=True, 
+                                         fill_bar_color='k', 
+                                         fontproperties = None,
+                                         label_top=True,
+                                         loc='center left', 
+                                         pad=1, 
+                                         borderpad=0, 
+                                         add_background_to_scalebar=True,
+                                         background_facecolor = 'k',
+                                         face_alpha=0.1,
+                                         length_unit= 'Km',
+                                         unit_transformation_function=None,
+                                         background_xpadding=0.2,
+                                         background_ypadding = 0.2,
+                                         background_edgecolor = 'k',
+                                         background_linewidth =1,
+                                         background_edgealpha = 1,
+                                         sep=2, 
+                                         x0=0.82, 
+                                         y0=0.1,
+                                         x1=1, 
+                                         y1=0.5)
     
     fig.subplots_adjust(top=0.88,
                         bottom=0.18,
