@@ -23,8 +23,9 @@ from Gridline_tick_formatting.gridline_tick_formatters import LongitudeFormatter
 
 from Scalebar_V1.draw_sizebar import draw_sizebar
 
+from Scalebar_V1.scale_bar_module import scale_bar_class
 
-class geopandas_custom_plot():
+class geopandas_custom_plot(scale_bar_class):
     """
     This is a class that contains several staticmethods for fancy plotting using cartopy.
     
@@ -33,63 +34,6 @@ class geopandas_custom_plot():
     Use it freely.
     
     """
-    
-    @ staticmethod
-    
-
-    def get_scalebar_with_rounded_kilometer_distance_based(gdf, distance_in_km=100):
-        """
-        Parameters:
-            gdf: the geodataframe from which the distance will be evaluated
-            
-            distance_in_km: the distance that will be used for the scalebar in km units.
-        
-        """
-        
-        
-        from geopy import distance
-    
-        import geopy
-    
-    
-        New_Point = distance.geodesic(kilometers=distance_in_km).destination(geopy.Point(SHP.centroid.y.mean(), SHP.centroid.x.mean()), 90)
-        
-        longitudinal_degree = New_Point.longitude
-        
-        geopandas_custom_plot.draw_sizebar(  ax,
-                                             x_size_in_data_units= abs(SHP.centroid.x.mean() - longitudinal_degree), 
-                                             rounding_value_for_xsize = 0,
-                                             decimal_separator=',',
-                                             bar_height=0.015, 
-                                             fill_bar=True, 
-                                             fill_bar_color='k', 
-                                             fontproperties = None,
-                                             label_top=True,
-                                             loc='center left', 
-                                             pad=1, 
-                                             borderpad=0, 
-                                             add_background_to_scalebar=True,
-                                             background_facecolor = 'k',
-                                             face_alpha=0.1,
-                                             length_unit= 'Km',
-                                             unit_transformation_function=None,
-                                             background_xpadding=0.2,
-                                             background_ypadding = 0.2,
-                                             background_edgecolor = 'k',
-                                             background_linewidth =1,
-                                             background_edgealpha = 1,
-                                             sep=2, 
-                                             x0=0.88, 
-                                             y0=0.1,
-                                             x1=1, 
-                                             y1=0.5)
-        
-        return longitudinal_degree
-
-        
-    
-    draw_sizebar = draw_sizebar
-
     
 
     @ staticmethod

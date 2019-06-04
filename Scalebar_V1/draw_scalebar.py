@@ -9,7 +9,7 @@ Created on Thu May 30 15:36:26 2019
 
 
 
-def draw_sizebar(ax, 
+def draw_scalebar(ax, 
                  x_size_in_data_units=3, 
                  rounding_value_for_xsize = 0,
                  decimal_separator = '.',
@@ -29,6 +29,7 @@ def draw_sizebar(ax,
                  background_xpadding=0.25,
                  background_ypadding = 0.2,
                  background_edgecolor = 'k',
+                 background_facealpha=1,
                  background_linewidth =1,
                  background_edgealpha = 1,
                  sep=2, 
@@ -133,6 +134,10 @@ def draw_sizebar(ax,
         
         --------------------------------------------------------------------------------------------------------------    
         
+        background_facealpha: the alpha of the background color
+        
+        --------------------------------------------------------------------------------------------------------------   
+        
         face_alpha (string): sets the color to the background alpha
             Standard = 'grey'
         
@@ -200,10 +205,6 @@ def draw_sizebar(ax,
     except:
         from . Functions.get_geo_axes_extent import get_distance
     
-    try:
-        from Functions.add_background_to_scalebar import add_background
-    except:
-        from . Functions.add_background_to_scalebar import add_background
 
     
     
@@ -269,25 +270,27 @@ def draw_sizebar(ax,
     
     ax.add_artist(bar)
     
-    window_extent = bar.get_window_extent(ax.figure.canvas.get_renderer())
+    bar.patch.set_color(background_facecolor)
+    bar.patch.set_alpha(background_facealpha)
     
-    figure_window_extent = ax.figure.transFigure.inverted().transform(window_extent)
+    from matplotlib.offsetbox import (AnchoredOffsetbox, HPacker)
     
-    x0, y0, x1, x1 = figure_window_extent.ravel()
+    from matplotlib.transforms import Bbox
     
-    if add_background_to_scalebar == True:
-        
-        add_background(ax, x0, x1, y0, y1, 
-                            facecolor=background_facecolor, 
-                            face_alpha=face_alpha, 
-                            linewidth =background_linewidth,
-                            transform=ax.figure.transFigure, 
-                            background_xpadding=background_xpadding,
-                            background_ypadding=background_ypadding,
-                            edgecolor = background_edgecolor,
-                            edgealpha=background_edgealpha)
-        
-    return window_extent, figure_window_extent
+    
+    child = HPacker(pad=0.2, sep=0.2, width=0.2, height=0.2, align='baseline', 
+                    mode='fixed', children=[bar])
+    
+    box = AnchoredOffsetbox(loc='center',
+                            pad=pad,
+                            borderpad=0.5,
+                            child=child,
+                            frameon=False, bbox_to_anchor=(x0, y0, x0, y1),
+                            bbox_transform=ax.figure.transFigure)
+
+    box.axes = ax
+    box.set_figure(ax.get_figure())
+   
 
 
 
@@ -309,18 +312,18 @@ if "__main__" == __name__:
     
     Para.plot(ax=ax, transform=Projection)
 
-    draw_sizebar(ax, rounding_value_for_xsize=2,
+    draw_scalebar(ax, rounding_value_for_xsize=2,
                  decimal_separator=',',
                  x0=0.82, y0=0.2, x1=1, y1=0.5, sep=2, pad=.5, 
                  borderpad=0, x_size_in_data_units=3, 
                  loc='center left',
-                 background_xpadding=0.25,
-                 background_ypadding=0.2,
                  add_background_to_scalebar=True,
                  fill_bar_color='k',
-                 face_alpha=0.1,
+                 face_alpha=1,
+                 background_facecolor='orange',
                  background_edgecolor = 'k',
                  background_linewidth=1,
+                 background_edgealpha=1,
                  length_unit='km',
                  unit_transformation_function=None)
 
