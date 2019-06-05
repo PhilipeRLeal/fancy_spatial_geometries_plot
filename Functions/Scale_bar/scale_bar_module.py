@@ -182,7 +182,54 @@ class scale_bar_class(object):
             else:
                 return round(Value, rounding_value_for_xsize)
             
-            
+    @ staticmethod
+    
+     def add_anchored_size_bar(transform, 
+                              loc='center',
+                              color='k',
+                              size=1,
+                              size_vertical=0.015,
+                              label= Formatted_Label,
+                              label_top=True,
+                              pad=0.1, 
+                              fontproperties=None,
+                              borderpad=0.1, 
+                              sep=0, 
+                              
+                              frameon=True, 
+                              fill_bar=True,
+                              bbox_to_anchor = (0.91, 0.02, 1, 0.08) # (x0, y0, x1, y1),
+                              bbox_transform=ax.figure.transFigure):
+
+            bar = AnchoredSizeBar(transform=transform, 
+                                  loc=loc,
+                                  color=fill_bar_color,
+                                  size=x_size_in_degrees,
+                                  size_vertical=bar_height,
+                                  label= Formatted_Label,
+                                  label_top=label_top,
+                                  pad=pad, 
+                                  fontproperties=fontproperties,
+                                  borderpad=borderpad, 
+                                  sep=sep, 
+                                  frameon=frameon, 
+                                  fill_bar=fill_bar,
+                                  bbox_to_anchor = Bbox.from_extents(bbox_to_anchor),
+                                  bbox_transform=bbox_transform)
+
+
+
+            ax.add_artist(bar)
+
+            #window_extent = bar.get_window_extent(ax.figure.canvas.get_renderer())
+
+            #figure_window_extent = ax.figure.transFigure.inverted().transform(window_extent)
+
+            #x0, y0, x1, x1 = figure_window_extent.ravel()
+            return bar
+    
+    
+    
     @ staticmethod
 
     def scalebar_based_on_degree_distance(ax, 
@@ -459,52 +506,9 @@ class scale_bar_class(object):
         
             
             
-        def add_anchored_size_bar(transform=trans, 
-                              loc=loc,
-                              color=fill_bar_color,
-                              size=x_size_in_degrees,
-                              size_vertical=bar_height,
-                              label= Formatted_Label,
-                              label_top=label_top,
-                              pad=pad, 
-                              fontproperties=fontproperties,
-                              borderpad=borderpad, 
-                              sep=sep, 
-                              
-                              frameon=True, 
-                              fill_bar=fill_bar,
-                              bbox_to_anchor = (x0, y0, x1, y1),
-                              bbox_transform=ax.figure.transFigure):
+        
 
-            bar = AnchoredSizeBar(transform=trans, 
-                                  loc=loc,
-                                  color=fill_bar_color,
-                                  size=x_size_in_degrees,
-                                  size_vertical=bar_height,
-                                  label= Formatted_Label,
-                                  label_top=label_top,
-                                  pad=pad, 
-                                  fontproperties=fontproperties,
-                                  borderpad=borderpad, 
-                                  sep=sep, 
-                                  frameon=frameon, 
-                                  fill_bar=fill_bar,
-                                  bbox_to_anchor = Bbox.from_extents(bbox_to_anchor),
-                                  bbox_transform=bbox_transform)
-
-
-
-            ax.add_artist(bar)
-
-            #window_extent = bar.get_window_extent(ax.figure.canvas.get_renderer())
-
-            #figure_window_extent = ax.figure.transFigure.inverted().transform(window_extent)
-
-            #x0, y0, x1, x1 = figure_window_extent.ravel()
-            return bar
-
-
-        Bbox_bar = add_anchored_size_bar(transform=trans, 
+        Bbox_bar = scale_bar_class.add_anchored_size_bar(transform=trans, 
                                               loc=loc,
                                               color=background_facecolor,
                                               size=x_size_in_degrees,
