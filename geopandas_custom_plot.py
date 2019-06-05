@@ -18,12 +18,12 @@ pd.set_option('display.max_columns', 500)
 import matplotlib
 
 
-from Gridline_tick_formatting.gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
+from Functions.Gridline_tick_formatting.gridline_tick_formatters import LongitudeFormatter, LatitudeFormatter
  
+from Functions.Scale_bar.scale_bar_module import scale_bar_class
 
-from Scalebar_V1.draw_sizebar import draw_sizebar
 
-from Scalebar_V1.scale_bar_module import scale_bar_class
+
 
 class geopandas_custom_plot(scale_bar_class):
     """
@@ -1072,6 +1072,8 @@ if '__main__' ==__name__:
     
     Transform = ccrs.Geodetic(globe=ccrs.Globe(ellipse='GRS80'))
     
+    
+    
     fig, ax = plt.subplots(1, subplot_kw={'projection':projection})
     
     
@@ -1123,7 +1125,19 @@ if '__main__' ==__name__:
     geopandas_custom_plot.add_colorbar_for_axes(ax, SHP, column='CD_GEOCMU', n_ticks_in_colorbar=5)
     
     
-    geopandas_custom_plot.get_scalebar_with_rounded_kilometer_distance_based(gdf=SHP, distance_in_km=300)
+   
+    
+    box = geopandas_custom_plot.scalebar_based_on_degree_distance(ax=ax, x_size_in_degrees=3, 
+                                                            pad=0.5,sep=2, borderpad=5, 
+                                                            length_unit='km',
+                                        background_facecolor='orange',
+                                        background_edgecolor ='purple',
+                                       background_facealpha=1,
+                                       x0=0.91,
+                                       y0=0.02,
+                                       x1=1,
+                                       y1=0.08,)
+    
     
     fig.subplots_adjust(top=0.88,
                         bottom=0.18,

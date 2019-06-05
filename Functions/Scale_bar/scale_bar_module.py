@@ -18,8 +18,6 @@ from matplotlib.transforms import Bbox
 import matplotlib
 
 
-
-
 class scale_bar_class(object):
     
     @ staticmethod
@@ -47,7 +45,10 @@ class scale_bar_class(object):
 
 
     @ staticmethod
-    def calculate_distance_based_on_Transverse_mercator_projection(ax, x_size_in_degrees, rounding_value_for_xsize=0, length_unit='Km', unit_transformation_function=None):
+    def calculate_distance_based_on_Transverse_mercator_projection(ax, x_size_in_degrees, 
+                                                                   rounding_value_for_xsize=0, 
+                                                                   length_unit='Km', 
+                                                                   unit_transformation_function=None):
         """
         ax is the axes to draw the scalebar on.
         x_size_in_degrees: it is size of the scalebar in Data transform coordinates (in degrees).
@@ -183,7 +184,6 @@ class scale_bar_class(object):
             
             
     @ staticmethod
-    
 
     def scalebar_based_on_degree_distance(ax, 
                                           distance_measuring_method='geopy',
@@ -200,7 +200,7 @@ class scale_bar_class(object):
                                           loc='center', 
                                           pad=0, 
                                           borderpad=0,
-                                          background_facecolor = 'k',
+                                          background_facecolor = 'white',
                                           face_alpha=1,
                                           length_unit= 'km',
                                           unit_transformation_function=None,
@@ -209,10 +209,10 @@ class scale_bar_class(object):
                                           background_edgealpha = 1,
                                           background_facealpha =1,
                                           sep=0, 
-                                          x0=0.8, 
-                                          y0=0.1,
-                                          x1=1, 
-                                          y1=0.5,
+                                          x0=0.91,
+                                          y0=0.02,
+                                          x1=1,
+                                          y1=0.08,
                                           over_write_distance_metric=False):
         
         """
@@ -452,11 +452,11 @@ class scale_bar_class(object):
             Formatted_Label = '{0} {1}'.format(converted_string, length_unit)
 
 
-            if over_write_distance_metric != False:
-                Formatted_Label = '{0} {1}'.format(over_write_distance_metric, length_unit)
-                
-                print(Formatted_Label)
+        if over_write_distance_metric is not False:
+            Formatted_Label = '{0} {1}'.format(over_write_distance_metric, length_unit)
             
+            print(Formatted_Label)
+        
             
             
         def add_anchored_size_bar(transform=trans, 
@@ -470,9 +470,10 @@ class scale_bar_class(object):
                               fontproperties=fontproperties,
                               borderpad=borderpad, 
                               sep=sep, 
+                              
                               frameon=True, 
                               fill_bar=fill_bar,
-                              bbox_to_anchor = (x0, y0, x0, y1),
+                              bbox_to_anchor = (x0, y0, x1, y1),
                               bbox_transform=ax.figure.transFigure):
 
             bar = AnchoredSizeBar(transform=trans, 
@@ -519,7 +520,7 @@ class scale_bar_class(object):
         
         Bbox_bar.patch.set_color(background_facecolor)
         Bbox_bar.patch.set_alpha(background_facealpha)
-        
+        Bbox_bar.patch.set_edgecolor(background_edgecolor)
         
        
         child = HPacker(pad=0.2, sep=0.2, width=0.2, height=0.2, align='baseline', 
@@ -529,14 +530,18 @@ class scale_bar_class(object):
                                 pad=pad,
                                 borderpad=0.5,
                                 child=child,
-                                frameon=False, bbox_to_anchor=(x0, y0, x0, y1),
+                                frameon=False, bbox_to_anchor=(x0, y0, x1, y1),
                                 bbox_transform=ax.figure.transFigure)
-
+        
+        box.patch.set_edgecolor(background_edgecolor)
+        
         box.axes = ax
         box.set_figure(ax.get_figure())
         
         return box
     
+    
+    @ staticmethod
     
     def scalebar_based_on_planar_distance(ax,
                                           x_planar_size=1, 
@@ -559,10 +564,10 @@ class scale_bar_class(object):
                                           background_edgealpha = 1,
                                           background_facealpha =1,
                                           sep=0, 
-                                          x0=0.8, 
-                                          y0=0.1,
-                                          x1=1, 
-                                          y1=0.5):
+                                          x0=0.91,
+                                          y0=0.02,
+                                          x1=1,
+                                          y1=0.08,):
         
         """
             Function description:
@@ -742,7 +747,7 @@ class scale_bar_class(object):
                               sep=sep, 
                               frameon=True, 
                               fill_bar=fill_bar,
-                              bbox_to_anchor = (x0, y0, x0, y1),
+                              bbox_to_anchor = (x0, y0, x1, y1),
                               bbox_transform=ax.figure.transFigure):
 
             bar = AnchoredSizeBar(transform=trans, 
@@ -756,12 +761,13 @@ class scale_bar_class(object):
                                   fontproperties=fontproperties,
                                   borderpad=borderpad, 
                                   sep=sep, 
+                                  
                                   frameon=frameon, 
                                   fill_bar=fill_bar,
                                   bbox_to_anchor = Bbox.from_extents(bbox_to_anchor),
                                   bbox_transform=bbox_transform)
 
-
+            
 
             ax.add_artist(bar)
 
@@ -792,7 +798,7 @@ class scale_bar_class(object):
         
         Bbox_bar.patch.set_color(background_facecolor)
         Bbox_bar.patch.set_alpha(background_facealpha)
-        
+        Bbox_bar.patch.set_edgecolor(background_edgecolor)
         
        
         child = HPacker(pad=0.2, sep=0.2, width=0.2, height=0.2, align='baseline', 
@@ -802,7 +808,7 @@ class scale_bar_class(object):
                                 pad=pad,
                                 borderpad=0.5,
                                 child=child,
-                                frameon=False, bbox_to_anchor=(x0, y0, x0, y1),
+                                frameon=False, bbox_to_anchor=(x0, y0, x1, y1),
                                 bbox_transform=ax.figure.transFigure)
 
         box.axes = ax
@@ -840,10 +846,10 @@ class scale_bar_class(object):
                                                            background_edgealpha = 1,
                                                            background_facealpha =1,
                                                            sep=0, 
-                                                           x0=0.8, 
-                                                           y0=0.1,
-                                                           x1=1, 
-                                                           y1=0.5):
+                                                           x0=0.91,
+                                                           y0=0.02,
+                                                           x1=1,
+                                                           y1=0.08):
         """
         Parameters:
             gdf: the geodataframe from which the distance will be evaluated
@@ -858,12 +864,14 @@ class scale_bar_class(object):
         import geopy
     
     
-        New_Point = distance.geodesic(kilometers=distance_in_km).destination(geopy.Point(SHP.centroid.y.mean(), SHP.centroid.x.mean()), 90)
+        New_Point = distance.geodesic(kilometers=distance_in_km).destination(geopy.Point(gdf.centroid.y.mean(), gdf.centroid.x.mean()), 90)
         
         longitudinal_degree = New_Point.longitude
         
+        dx = abs(gdf.centroid.x.mean() - longitudinal_degree)
+        
         scale_bar_class.scalebar_based_on_degree_distance(   ax=ax,
-                                                             x_size_in_degrees= abs(SHP.centroid.x.mean() - longitudinal_degree), 
+                                                             x_size_in_degrees= dx, 
                                                              rounding_value_for_xsize = rounding_value_for_xsize,
                                                              decimal_separator=decimal_separator,
                                                              bar_height=bar_height, 
@@ -923,6 +931,7 @@ if "__main__" == __name__:
                                                             rounding_value_for_xsize=0,
                                                             unit_transformation_function=lambda x: x/1000,
                                                             pad=0.5,sep=2, borderpad=5, 
+                                                            background_edgecolor='purple',
                                                             background_facecolor='orange',
                                                             background_facealpha=1)
     
@@ -951,6 +960,40 @@ if "__main__" == __name__:
                                                             pad=0.5,sep=2, borderpad=5, 
                                                             length_unit='km',
                                         background_facecolor='orange',
+                                        background_edgecolor ='purple',
+                                       background_facealpha=1)
+    
+    
+    Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
+    
+    Gridliner.xlabels_top = False
+    Gridliner.ylabels_right = False
+    
+    
+    fig.show()
+    
+    
+    # plotando em graus:
+    
+    SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
+    
+    
+    RGS = SHP.loc[SHP.UF_ID=='51']
+    
+    PA = SHP.loc[SHP.UF_ID=='15']
+    
+    Projection = ccrs.PlateCarree()
+    
+    fig, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})
+    
+    
+    PA.plot(ax=ax, transform=Projection)
+    
+    box = scale_bar_class.scalebar_based_on_degree_distance(ax=ax, x_size_in_degrees=3, 
+                                                            pad=0.5,sep=2, borderpad=5, 
+                                                            length_unit='km',
+                                        background_facecolor='orange',
+                                        background_edgecolor ='purple',
                                        background_facealpha=1)
     
     
@@ -980,10 +1023,11 @@ if "__main__" == __name__:
     
     RGS.plot(ax=ax, transform=Projection)
     
-    box = scale_bar_class.get_scalebar_with_rounded_kilometer_distance_based(PA,
+    box = scale_bar_class.get_scalebar_with_rounded_kilometer_distance_based(RGS,
                                                                              ax, 
-                                                                             300, 
+                                                                             distance_in_km=300, 
                                                             pad=0.5,sep=2, borderpad=5, 
+                                                            background_edgecolor ='purple',
                                                             length_unit='km',
                                         background_facecolor='orange',
                                        background_facealpha=1)
