@@ -573,12 +573,11 @@ class geopandas_custom_plot(scale_bar_class):
     @ staticmethod
     
     def add_custom_gridline(geo_axes, 
-                            
+                            draw_labels=True,
                             gridline_attr=dict(linewidth=1, 
                                             color='black', 
                                             alpha=0.35, 
-                                            linestyle='--', 
-                                            draw_labels=True),
+                                            linestyle='--'),
                                                
                             n_coordinate_ticks={'x_number':3,  'y_number':3},
                             
@@ -594,19 +593,72 @@ class geopandas_custom_plot(scale_bar_class):
                                                                        'west_hemisphere_str': 'O',
                                                                        'east_hemisphere_str': 'L'}) ,
                             
-                             gridline_xlabel_style = {'color': 'black', 
-                                                       #'weight': 'bold', 
-                                                       'rotation':90,
-                                                       'fontsize':12},
+                            gridline_xlabel_style = {'tick_color':'k',
+													 'labelcolor': 'k', 
+                                                     'weight': 'light', 
+                                                     'labelrotation':90,
+												     'labelsize':6,
+													 'ticksize':2,
+													 'labelpad':5,
+                                                     'fontsize':18},
                          
-                            gridline_ylabel_style = {'color': 'black', 
-                                                   #'weight': 'bold', 
-                                                   'rotation':0,
-                                                   'fontsize':18},       
+                            gridline_ylabel_style = {'tick_color':'k',
+													 'labelcolor': 'k', 
+                                                     'weight': 'light', 
+                                                     'labelrotation':0,
+												     'labelsize':6,
+													 'ticksize':2,
+													 'labelpad':5,
+                                                     'fontsize':18},  
+                            
+							tick_axis_positions={'xlabels_top':False,
+												 'ylabels_left':False,
+												 'ylabels_right':False,
+												 'xlabels_bottom':False}												   
                             
                             ):
         
-        
+        """
+            Function description:
+				This inserts custom gridlines into a given axes.
+			
+			parameters:
+				
+				draw_labels(bool): whether to draw the labels in the gridline or not
+					Default = True
+				
+				gridline_attr (dict): sets the linewidth, the linecolor, the alpha of the linecolor, linestyle
+                
+				n_coordinate_ticks (dict): sets the number of lines in the gridlines x coordinate (longitude) and y coordinate (latitude)
+				
+					Default = {'x_number':3,  'y_number':3}
+		
+				gridline_tick_formating (dict): contains parameters for setting the lines of the gridlines. 
+				
+					latitude_tick_formating: dictionary containing parameters for defining the ticklines of the y axis of the given axes:
+						
+						'number_format' (string or matplotlib formatter function based): sets the format of the coordinate number in the gridlines ticklabels
+						
+						'degree_symbol' (string): sets the symbol of the coordinates
+							Default = '°'
+						
+						
+						'north_hemisphere_str' (string): the string to be used for the north hemisphere.
+							Default = 'N' 
+						
+						'south_hemisphere_str' (string): the string to be used for the south hemisphere
+							Default = 'S' for south hemisphere
+					
+					
+					longitude_tick_formating: the same thing as latitude_tick_formating for longitude data, except that it is relative to the xaxis of the given axes.
+					
+						
+					gridline_xlabel_style (dict): sets xlabel style of the griline of the given axes. It accepts all parameters that ax.gridlines().xlabel_style accepts.
+					
+					gridline_ylabel_style (dict): sets xlabel style of the griline of the given axes. It accepts all parameters that ax.gridlines().ylabel_style accepts.
+					
+					tick_axis_positions: allows further customization of the ticklabels. It sets which axis the labels should be drawn in a given axes.
+        """
         geo_extent = geo_axes.get_extent()
         
         X = np.linspace(geo_extent[0], geo_extent[1], n_coordinate_ticks['x_number'], endpoint=True)
@@ -621,19 +673,13 @@ class geopandas_custom_plot(scale_bar_class):
         
         
         gl = geo_axes.gridlines(crs=geo_axes.projection, xlocs=X, 
-								ylocs=Y, **gridline_attr) # axes projection here too
+								ylocs=Y, **gridline_attr, draw_labels=draw_labels) # axes projection here too
         
 		
         ## Better set to no standard labeling so to avoid possible overlay of custom and standard labels in geo_axes
         
         
-        tick_axis_positions={'xlabels_top':False,
-                             'ylabels_left':False,
-                             'ylabels_right':False,
-                             'xlabels_bottom':False}
-        
-        
-
+       
         gl.xlabels_top = tick_axis_positions['xlabels_top']
         gl.ylabels_left = tick_axis_positions['ylabels_left']
         gl.ylabels_right= tick_axis_positions['ylabels_right']
@@ -642,7 +688,6 @@ class geopandas_custom_plot(scale_bar_class):
         
         #gl.ylocator = mticker.FixedLocator(Y)
         # Formater do gridline
-        
         
         
         
@@ -695,22 +740,22 @@ class geopandas_custom_plot(scale_bar_class):
         geopandas_custom_plot._set_ticks(ax=geo_axes, 
                                         axis='x', 
                                         which='major', 
-                                        labelpad=5, 
-                                        labelrotation=90, 
-                                        ticksize=2, 
-                                        labelsize=6,
-                                        labelcolor='k',
-                                        tick_color='k',)
+                                        labelpad=gridline_xlabel_style['labelpad'], 
+                                        labelrotation=gridline_xlabel_style['labelrotation'], 
+                                        ticksize=gridline_xlabel_style['ticksize'], 
+                                        labelsize=gridline_xlabel_style['labelsize'],
+                                        labelcolor=gridline_xlabel_style['labelcolor'],
+                                        tick_color=gridline_xlabel_style['tick_color'])
         
         
         geopandas_custom_plot._set_ticks(ax=geo_axes, axis='y', 
                                         which='major', 
-                                        labelpad=5, 
-                                        labelrotation=0, 
-                                        ticksize=2, 
-                                        labelsize=6,
-                                        labelcolor='k',
-                                        tick_color='k',)
+                                        labelpad=gridline_ylabel_style['labelpad'], 
+                                        labelrotation=gridline_ylabel_style['labelrotation'], 
+                                        ticksize=gridline_ylabel_style['ticksize'], 
+                                        labelsize=gridline_ylabel_style['labelsize'],
+                                        labelcolor=gridline_ylabel_style['labelcolor'],
+                                        tick_color=gridline_ylabel_style['tick_color'])
         
         
         return geo_axes, gl
@@ -777,12 +822,11 @@ class geopandas_custom_plot(scale_bar_class):
         ax.tick_params(axis=axis, 
                       which = which, 
                       pad = labelpad, 
-                      
+                      rotation=labelrotation,
                       size = ticksize, 
                       color = tick_color,
                       length=length,
                       width=width,
-                      labelrotation = labelrotation, 
                       labelsize = labelsize,
                       labelcolor = labelcolor,
                       
@@ -900,6 +944,7 @@ class geopandas_custom_plot(scale_bar_class):
                         x_head = 0.892,
                         y_head = 0.12,
                         width=0.05,
+						label_pad=0.012,
                         transform=None):
         
         """Function that adds north arrow plus a text over the arrows head
@@ -913,6 +958,7 @@ class geopandas_custom_plot(scale_bar_class):
             x_head = (float) 0.975   - the xtop of the arrow
             y_head = (float) 0.030,  - the ytop of the arrow
             width=0.05: the width of the arrows head
+			label_pad: the distance in figure units from the label to the arrow.
             transform: the transform that wil be used to set the position of the arrow in the figure/axes
             (standard): None == fig.transFigure
         
@@ -938,8 +984,8 @@ class geopandas_custom_plot(scale_bar_class):
 
         fig.patches.extend([arrow])
     
-        plt.text(x_head, 
-				 y_head + 0.8*(y_head - y_tail) , 
+        fig.text(x_head, 
+				 y_head + label_pad , 
 				s='N', 
 				size=11, 
 				ha='center', 
