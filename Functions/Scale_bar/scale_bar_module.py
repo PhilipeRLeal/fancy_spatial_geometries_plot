@@ -199,8 +199,11 @@ class scale_bar_class(object):
                               frameon=True, 
                               fill_bar=True,
                               bbox_to_anchor = (0.91, 0.02, 1, 0.08) # (x0, y0, x1, y1),
-                              bbox_transform=ax.figure.transFigure):
-
+                              bbox_transform='axes'):
+            
+            if bbox_transform == 'axes':
+                bbox_transform = ax.figure.transFigure
+            
             bar = AnchoredSizeBar(transform=transform, 
                                   loc=loc,
                                   color=fill_bar_color,
