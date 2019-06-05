@@ -184,12 +184,12 @@ class scale_bar_class(object):
             
     @ staticmethod
     
-     def add_anchored_size_bar(transform, 
+    def add_anchored_size_bar(transform, 
                               loc='center',
                               color='k',
                               size=1,
                               size_vertical=0.015,
-                              label= Formatted_Label,
+                              label= None,
                               label_top=True,
                               pad=0.1, 
                               fontproperties=None,
@@ -209,7 +209,7 @@ class scale_bar_class(object):
                                   color=fill_bar_color,
                                   size=x_size_in_degrees,
                                   size_vertical=bar_height,
-                                  label= Formatted_Label,
+                                  label= label,
                                   label_top=label_top,
                                   pad=pad, 
                                   fontproperties=fontproperties,
