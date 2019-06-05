@@ -593,23 +593,18 @@ class geopandas_custom_plot(scale_bar_class):
                                                                        'west_hemisphere_str': 'O',
                                                                        'east_hemisphere_str': 'L'}) ,
                             
-                            gridline_xlabel_style = {'tick_color':'k',
-													 'labelcolor': 'k', 
-                                                     'weight': 'light', 
-                                                     'labelrotation':90,
-												     'labelsize':6,
-													 'ticksize':2,
-													 'labelpad':5,
-                                                     'fontsize':18},
+							gridline_xlabel_style = {'color': 'black', 
+                                                       #'weight': 'bold', 
+                                                       'rotation':90,
+                                                       'fontsize':12},
                          
-                            gridline_ylabel_style = {'tick_color':'k',
-													 'labelcolor': 'k', 
-                                                     'weight': 'light', 
-                                                     'labelrotation':0,
-												     'labelsize':6,
-													 'ticksize':2,
-													 'labelpad':5,
-                                                     'fontsize':18},  
+                            gridline_ylabel_style = {'color': 'black', 
+                                                   #'weight': 'bold', 
+                                                   'rotation':0,
+                                                   'fontsize':18},  
+							
+							
+            
                             
 							tick_axis_positions={'xlabels_top':False,
 												 'ylabels_left':False,
@@ -693,7 +688,7 @@ class geopandas_custom_plot(scale_bar_class):
         
         longitude_tick_formating = gridline_tick_formating['longitude_tick_formating']
         
- 
+		
         
         number_format = longitude_tick_formating.get('number_format', '.2f')
         west_hemisphere_str = longitude_tick_formating.get('west_hemisphere_str', 'O')  
@@ -709,10 +704,7 @@ class geopandas_custom_plot(scale_bar_class):
                                            dateline_direction_label=dateline_direction_label)
 
         
-        latitude_tick_formating={'number_format':'.2f', # com duas casas decimais
-                                 'degree_symbol':'°',
-                                 'north_hemisphere_str':'N'}
-        
+               
         latitude_tick_formating = gridline_tick_formating['latitude_tick_formating']
         
         number_format = latitude_tick_formating.get('number_format', '.2f')
@@ -735,27 +727,6 @@ class geopandas_custom_plot(scale_bar_class):
         gl.ylabel_style = gridline_ylabel_style
         
         
-        
-        
-        geopandas_custom_plot._set_ticks(ax=geo_axes, 
-                                        axis='x', 
-                                        which='major', 
-                                        labelpad=gridline_xlabel_style['labelpad'], 
-                                        labelrotation=gridline_xlabel_style['labelrotation'], 
-                                        ticksize=gridline_xlabel_style['ticksize'], 
-                                        labelsize=gridline_xlabel_style['labelsize'],
-                                        labelcolor=gridline_xlabel_style['labelcolor'],
-                                        tick_color=gridline_xlabel_style['tick_color'])
-        
-        
-        geopandas_custom_plot._set_ticks(ax=geo_axes, axis='y', 
-                                        which='major', 
-                                        labelpad=gridline_ylabel_style['labelpad'], 
-                                        labelrotation=gridline_ylabel_style['labelrotation'], 
-                                        ticksize=gridline_ylabel_style['ticksize'], 
-                                        labelsize=gridline_ylabel_style['labelsize'],
-                                        labelcolor=gridline_ylabel_style['labelcolor'],
-                                        tick_color=gridline_ylabel_style['tick_color'])
         
         
         return geo_axes, gl
