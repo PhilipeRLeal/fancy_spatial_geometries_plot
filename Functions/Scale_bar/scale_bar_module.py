@@ -187,7 +187,6 @@ class scale_bar_class(object):
     def add_anchored_size_bar(transform, 
                               loc='center',
                               color='k',
-                              size=1,
                               size_vertical=0.015,
                               label= None,
                               label_top=True,
@@ -195,18 +194,19 @@ class scale_bar_class(object):
                               fontproperties=None,
                               borderpad=0.1, 
                               sep=0, 
-                              
+                              bar_height=0.015,
+                              x_size_in_degrees=3,
                               frameon=True, 
                               fill_bar=True,
-                              bbox_to_anchor = (0.91, 0.02, 1, 0.08), # (x0, y0, x1, y1),
-                              bbox_transform='axes'):
+                              bbox_to_anchor = (0.5, 0.02, 1, 0.08), # (x0, y0, x1, y1),
+                              bbox_transform='figure'):
             
-            if bbox_transform == 'axes':
+            if bbox_transform == 'figure':
                 bbox_transform = ax.figure.transFigure
             
             bar = AnchoredSizeBar(transform=transform, 
                                   loc=loc,
-                                  color=fill_bar_color,
+                                  color=color,
                                   size=x_size_in_degrees,
                                   size_vertical=bar_height,
                                   label= label,
@@ -511,19 +511,22 @@ class scale_bar_class(object):
             
         
 
-        Bbox_bar = scale_bar_class.add_anchored_size_bar(transform=trans, 
-                                              loc=loc,
-                                              color=background_facecolor,
-                                              size=x_size_in_degrees,
-                                              size_vertical=bar_height,
-                                              label= Formatted_Label,
-                                              label_top=label_top,
-                                              pad=pad, 
-                                              fontproperties=fontproperties,
-                                              borderpad=borderpad, 
-                                              sep=sep, 
-                                              frameon=True, 
-                                              fill_bar=fill_bar)
+        Bbox_bar = add_anchored_size_bar(transform=trans, 
+                                      loc=loc,
+                                      color=background_facecolor,
+                                      x_size_in_degrees=x_size_in_degrees,
+                                      size_vertical=bar_height,
+                                      label= Formatted_Label,
+                                      label_top=label_top,
+                                      pad=pad,
+                                      bar_height=bar_height,
+                                      fontproperties=fontproperties,
+                                      borderpad=borderpad, 
+                                      sep=sep, 
+                                      frameon=True, 
+                                      fill_bar=fill_bar,
+                                      bbox_to_anchor=(x0,y0,x1, y1),
+                                      bbox_transform=ax.figure.transFigure)
         
         Bbox_bar.patch.set_color(background_facecolor)
         Bbox_bar.patch.set_alpha(background_facealpha)
