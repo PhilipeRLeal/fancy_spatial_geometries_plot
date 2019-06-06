@@ -12,7 +12,7 @@ import numpy as np
 import cartopy.crs as ccrs
 from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
 from matplotlib.font_manager import FontProperties
-from matplotlib.offsetbox import (AnchoredOffsetbox, HPacker)
+from matplotlib.offsetbox import (AnchoredOffsetbox, HPacker, VPacker)
 from matplotlib import transforms
 from matplotlib.transforms import Bbox
 import matplotlib
@@ -184,19 +184,19 @@ class scale_bar_class(object):
             
     @ staticmethod
     
-    def add_anchored_size_bar(transform, 
+    def add_anchored_size_bar(ax,
+						      transform, 
                               loc='center',
                               color='k',
-                              size_vertical=0.015,
+							  horizontal_size=3,
                               label= None,
                               label_top=True,
-                              pad=0.1, 
+                              pad=0.3, 
                               fontproperties=None,
                               borderpad=0.1, 
                               sep=0.2, 
                               bar_height=0.015,
-                              x_size_in_degrees=3,
-                              frameon=True, 
+							  frameon=True, 
                               fill_bar=True,
                               bbox_to_anchor = (0.5, 0.02, 1, 0.08), # (x0, y0, x1, y1),
                               bbox_transform='figure'):
@@ -207,7 +207,7 @@ class scale_bar_class(object):
             bar = AnchoredSizeBar(transform=transform, 
                                   loc=loc,
                                   color=color,
-                                  size=x_size_in_degrees,
+                                  size=horizontal_size,
                                   size_vertical=bar_height,
                                   label= label,
                                   label_top=label_top,
@@ -248,7 +248,7 @@ class scale_bar_class(object):
                                           fontproperties = None,
                                           label_top=True,
                                           loc='center', 
-                                          pad=0, 
+                                          pad=0.3, 
                                           borderpad=0,
                                           background_facecolor = 'white',
                                           face_alpha=1,
@@ -511,22 +511,22 @@ class scale_bar_class(object):
             
         
 
-        Bbox_bar = add_anchored_size_bar(transform=trans, 
-                                      loc=loc,
-                                      color=background_facecolor,
-                                      x_size_in_degrees=x_size_in_degrees,
-                                      size_vertical=bar_height,
-                                      label= Formatted_Label,
-                                      label_top=label_top,
-                                      pad=pad,
-                                      bar_height=bar_height,
-                                      fontproperties=fontproperties,
-                                      borderpad=borderpad, 
-                                      sep=sep, 
-                                      frameon=True, 
-                                      fill_bar=fill_bar,
-                                      bbox_to_anchor=(x0,y0,x1, y1),
-                                      bbox_transform=ax.figure.transFigure)
+        Bbox_bar = scale_bar_class.add_anchored_size_bar( ax=ax,
+														  transform=trans, 
+														  loc=loc,
+														  color=background_facecolor,
+														  horizontal_size=x_size_in_degrees,
+														  label= Formatted_Label,
+														  label_top=label_top,
+														  pad=pad,
+														  bar_height=bar_height,
+														  fontproperties=fontproperties,
+														  borderpad=borderpad, 
+														  sep=sep, 
+														  frameon=True, 
+														  fill_bar=fill_bar,
+														  bbox_to_anchor=(x0,y0,x1, y1),
+														  bbox_transform=ax.figure.transFigure)
         
         Bbox_bar.patch.set_color(background_facecolor)
         Bbox_bar.patch.set_alpha(background_facealpha)
@@ -744,67 +744,23 @@ class scale_bar_class(object):
         Formatted_Label = '{0} {1}'.format(converted_string, length_unit)
             
             
-        def add_anchored_size_bar(transform=trans, 
-                              loc=loc,
-                              color=fill_bar_color,
-                              size=x_planar_size,
-                              size_vertical=bar_height,
-                              label= Formatted_Label,
-                              label_top=label_top,
-                              pad=pad, 
-                              fontproperties=fontproperties,
-                              borderpad=borderpad, 
-                              sep=sep, 
-                              frameon=True, 
-                              fill_bar=fill_bar,
-                              bbox_to_anchor = (x0, y0, x1, y1),
-                              bbox_transform=ax.figure.transFigure):
-
-            bar = AnchoredSizeBar(transform=trans, 
-                                  loc=loc,
-                                  color=fill_bar_color,
-                                  size=x_planar_size,
-                                  size_vertical=bar_height,
-                                  label= Formatted_Label,
-                                  label_top=label_top,
-                                  pad=pad, 
-                                  fontproperties=fontproperties,
-                                  borderpad=borderpad, 
-                                  sep=sep, 
-                                  
-                                  frameon=frameon, 
-                                  fill_bar=fill_bar,
-                                  bbox_to_anchor = Bbox.from_extents(bbox_to_anchor),
-                                  bbox_transform=bbox_transform)
-
-            
-
-            ax.add_artist(bar)
-
-            #window_extent = bar.get_window_extent(ax.figure.canvas.get_renderer())
-
-            #figure_window_extent = ax.figure.transFigure.inverted().transform(window_extent)
-
-            #x0, y0, x1, x1 = figure_window_extent.ravel()
-            return bar
-
         
-        
-        
-        
-        Bbox_bar = add_anchored_size_bar(transform=trans, 
-                                              loc=loc,
-                                              color=background_facecolor,
-                                              size=x_planar_size,
-                                              size_vertical=bar_height,
-                                              label= None,
-                                              label_top=label_top,
-                                              pad=pad, 
-                                              fontproperties=fontproperties,
-                                              borderpad=borderpad, 
-                                              sep=sep, 
-                                              frameon=True, 
-                                              fill_bar=fill_bar)
+        Bbox_bar = scale_bar_class.add_anchored_size_bar(ax=ax,
+														 transform=trans, 
+														 loc=loc,
+														 color=background_facecolor,
+														 horizontal_size=x_planar_size,
+														 label= Formatted_Label,
+														 label_top=label_top,
+														 pad=pad, 
+														 bar_height=bar_height,
+														 fontproperties=fontproperties,
+														 borderpad=borderpad, 
+														 sep=sep, 
+														 frameon=True, 
+														 fill_bar=fill_bar,
+														 bbox_to_anchor=(x0,y0,x1, y1),
+														 bbox_transform=ax.figure.transFigure)
         
         Bbox_bar.patch.set_color(background_facecolor)
         Bbox_bar.patch.set_alpha(background_facealpha)
@@ -830,9 +786,7 @@ class scale_bar_class(object):
     
     @ staticmethod
     
-
-    def get_scalebar_with_rounded_kilometer_distance_based(gdf, 
-                                                           ax, 
+    def get_scalebar_with_rounded_kilometer_distance_based(ax, 
                                                            decimal_separator=',',
                                                            distance_in_km=100,
                                                            distance_measuring_method='geopy',
@@ -845,8 +799,8 @@ class scale_bar_class(object):
                                                            fontproperties = None,
                                                            label_top=True,
                                                            loc='center', 
-                                                           pad=0, 
-                                                           borderpad=0,
+                                                           pad=0.1, 
+                                                           borderpad=0.1,
                                                            background_facecolor = 'k',
                                                            face_alpha=1,
                                                            length_unit= 'km',
@@ -855,7 +809,7 @@ class scale_bar_class(object):
                                                            background_linewidth =1,
                                                            background_edgealpha = 1,
                                                            background_facealpha =1,
-                                                           sep=0, 
+                                                           sep=0.1, 
                                                            x0=0.91,
                                                            y0=0.02,
                                                            x1=1,
@@ -873,12 +827,12 @@ class scale_bar_class(object):
     
         import geopy
     
-    
-        New_Point = distance.geodesic(kilometers=distance_in_km).destination(geopy.Point(gdf.centroid.y.mean(), gdf.centroid.x.mean()), 90)
+        x0, x1, y0, y1 = ax.get_extent()
+        New_Point = distance.geodesic(kilometers=distance_in_km).destination(geopy.Point(np.mean([y0, y1]), np.mean([x0, x1])), 90)
         
         longitudinal_degree = New_Point.longitude
         
-        dx = abs(gdf.centroid.x.mean() - longitudinal_degree)
+        dx = abs(np.mean([x0, x1]) - longitudinal_degree)
         
         scale_bar_class.scalebar_based_on_degree_distance(   ax=ax,
                                                              x_size_in_degrees= dx, 
@@ -969,7 +923,7 @@ if "__main__" == __name__:
     box = scale_bar_class.scalebar_based_on_degree_distance(ax=ax, x_size_in_degrees=3, 
                                                             pad=0.5,sep=2, borderpad=5, 
                                                             length_unit='km',
-                                        background_facecolor='orange',
+                                        background_facecolor=(1,1,1,0.5),
                                         background_edgecolor ='purple',
                                        background_facealpha=1)
     
@@ -1033,14 +987,20 @@ if "__main__" == __name__:
     
     RGS.plot(ax=ax, transform=Projection)
     
-    box = scale_bar_class.get_scalebar_with_rounded_kilometer_distance_based(RGS,
-                                                                             ax, 
+    box = scale_bar_class.get_scalebar_with_rounded_kilometer_distance_based(ax, 
                                                                              distance_in_km=300, 
-                                                            pad=0.5,sep=2, borderpad=5, 
-                                                            background_edgecolor ='purple',
-                                                            length_unit='km',
-                                        background_facecolor='orange',
-                                       background_facealpha=1)
+                                                                            pad=0.15,borderpad=1, 
+                                                                            background_edgecolor ='purple',
+                                                                            length_unit='km',
+                                                                            background_facecolor='orange',
+                                                                            background_facealpha=1,
+                                                                           background_linewidth =1,
+                                                                           background_edgealpha = 1,
+                                                                           sep=0.1, 
+                                                                           x0=0.01,
+                                                                           y0=0.02,
+                                                                           x1=0.03,
+                                                                           y1=0.5)
     
     
     Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
