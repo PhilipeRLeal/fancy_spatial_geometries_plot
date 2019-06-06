@@ -173,7 +173,8 @@ class geopandas_custom_plot(scale_bar_class):
         return cbar
     
     @ staticmethod
-    def add_colorbar_for_fig (fig, gdf, 
+    def add_colorbar_for_fig (fig, Vmin,
+                              Vmax, 
                               column=None,
                               n_ticks_in_colorbar=4,
                               Bounding_box=[0.9, 0.17, 0.02, 0.65],
@@ -237,10 +238,7 @@ class geopandas_custom_plot(scale_bar_class):
         
         else:
             cmap = getattr(mpl.cm, cmap)
-        
-        
-        Vmin = gdf[column].min()
-        Vmax = gdf[column].max()
+     
         
         Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
         Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
