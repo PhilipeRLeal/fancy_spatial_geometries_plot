@@ -172,6 +172,104 @@ class geopandas_custom_plot(scale_bar_class):
 
         return cbar
     
+    @ staticmethod
+    def add_colorbar_for_fig (fig, gdf, 
+                              column=None,
+                              n_ticks_in_colorbar=4,
+                              Bounding_box=[0.9, 0.17, 0.02, 0.65],
+                              round_float_value_colorbar_tickslabels=2, 
+                              cmap='viridis',
+                              alpha=1,
+							  n_colors_in_cmap=None,
+							  colorbar_tick_fontsize=7, decimal_separator=','):
+
+
+        '''
+		Parameters:
+		
+		
+            fig: the fig into which space will be drawn for fixing the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			column: the dataframe (or geodataframe) column from which the colors will be derived for the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			n_ticks_in_colorbar: sets the number of ticks to be plotted in the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			round_float_value_colorbar_tickslabels: the resolution after the decimal separator to be applied
+			
+			----------------------------------------------------------------------------------------------
+            
+			cmap: the cmap name to be used in the colorbar. The function also accepts a matplotlib.colors.ListedColormap instance, instead of a cmap name.
+			
+			----------------------------------------------------------------------------------------------
+            
+			n_colors_in_cmap: number of colors (discrete intervals) to be used in the colorbar. Only applicable for cmap str instance 
+			
+				i.e.: cmap='viridis'
+						n_colors_in_cmap = 4
+						
+			
+			----------------------------------------------------------------------------------------------
+            
+			colorbar_tick_fontsize: the fontsize of the ticklabels of the colorbar
+			
+			----------------------------------------------------------------------------------------------
+            
+			
+			
+		Returns:
+			colorbar instance
+			
+		
+        '''
+		
+        if isinstance(cmap, str):
+        
+            cmap = plt.cm.get_cmap(cmap , n_colors_in_cmap)     
+
+        elif isinstance(cmap, matplotlib.colors.ListedColormap):
+            cmap = cmap
+        
+        else:
+            cmap = getattr(mpl.cm, cmap)
+        
+        
+        Vmin = gdf[column].min()
+        Vmax = gdf[column].max()
+        
+        Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
+        Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
+
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
+    
+        sm._A = []
+        
+        fig=fig
+        
+        
+        cax = fig.add_axes(Bounding_box)
+        
+        
+        cbar = fig.colorbar(sm, cax=cax)
+        
+
+        Ticks_list = [str(tick).replace('.', decimal_separator) for tick in Ticks_list]
+        
+        cbar.set_ticklabels(Ticks_list)
+		
+        cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
+			
+
+        return cbar
+    
+    
+    
+
     
     
     #####################################################################

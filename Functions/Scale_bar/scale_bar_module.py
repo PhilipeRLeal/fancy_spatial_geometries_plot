@@ -263,6 +263,7 @@ class scale_bar_class(object):
                                           y0=0.02,
                                           x1=1,
                                           y1=0.08,
+                                          K_times=3,
                                           over_write_distance_metric=False):
         
         """
@@ -507,9 +508,9 @@ class scale_bar_class(object):
         
             
             
+        from functools import partial
         
-
-        Bbox_bar = scale_bar_class.add_anchored_size_bar( ax=ax,
+        P_scale_bar_c = partial(scale_bar_class.add_anchored_size_bar, ax=ax,
 														  transform=trans, 
 														  loc=loc,
 														  color='k',
@@ -522,16 +523,18 @@ class scale_bar_class(object):
 														  borderpad=borderpad, 
 														  sep=sep, 
 														  frameon=True, 
-														  fill_bar=fill_bar,
 														  bbox_to_anchor=(x0,y0,x1, y1),
 														  bbox_transform=ax.figure.transFigure)
         
-        
-        
-       
+
+        Bbox_bar = P_scale_bar_c(fill_bar=True)
+            
+
         child = HPacker(pad=0.2, sep=0.2, width=0.2, height=0.2, align='baseline', 
                         mode='fixed', children=[Bbox_bar])
-
+       
+         
+        
         box = AnchoredOffsetbox(loc='center',
                                 pad=pad,
                                 borderpad=0.5,
@@ -917,7 +920,11 @@ if "__main__" == __name__:
                                                             pad=0.5,sep=2, borderpad=5, 
                                                             background_edgecolor='purple',
                                                             background_facecolor='orange',
-                                                            background_facealpha=1)
+                                                            background_facealpha=1,
+                                                            x0=0.4,
+                                                             y0=0.02,
+                                                             x1=1,
+                                                             y1=0.08)
     
     
     
@@ -945,7 +952,11 @@ if "__main__" == __name__:
                                                             length_unit='km',
                                                             background_facecolor=(1,1,1,0.5),
                                                             background_edgecolor ='purple',
-                                                            background_facealpha=1)
+                                                            background_facealpha=1,
+                                                            x0=0.4,
+                                                             y0=0.02,
+                                                             x1=1,
+                                                             y1=0.08)
     
     
     Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
@@ -976,9 +987,13 @@ if "__main__" == __name__:
     box = scale_bar_class.scalebar_based_on_degree_distance(ax=ax, x_size_in_degrees=3, 
                                                             pad=0.5,sep=2, borderpad=5, 
                                                             length_unit='km',
-                                        background_facecolor='orange',
-                                        background_edgecolor ='purple',
-                                       background_facealpha=1)
+                                                            background_facecolor='orange',
+                                                            background_edgecolor ='purple',
+                                                            background_facealpha=1,
+                                                            x0=0.4,
+                                                             y0=0.02,
+                                                             x1=1,
+                                                             y1=0.08)
     
     
     Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
@@ -1015,10 +1030,10 @@ if "__main__" == __name__:
                                                                              background_facecolor=(1,1,1,0.5),
                                                                              background_edgecolor ='purple',
                                                                              background_facealpha=1,
-                                                                             x0=0.8,
+                                                                             x0=0.4,
                                                                              y0=0.02,
-                                                                             x1=1,
-                                                                             y1=0.08,)
+                                                                             x1=0.9,
+                                                                             y1=0.08)
         
     
     Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
