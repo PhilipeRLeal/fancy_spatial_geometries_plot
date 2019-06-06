@@ -193,7 +193,7 @@ class scale_bar_class(object):
                               pad=0.1, 
                               fontproperties=None,
                               borderpad=0.1, 
-                              sep=0, 
+                              sep=0.2, 
                               bar_height=0.015,
                               x_size_in_degrees=3,
                               frameon=True, 
