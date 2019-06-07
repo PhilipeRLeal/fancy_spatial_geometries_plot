@@ -37,7 +37,7 @@ class geopandas_custom_plot(scale_bar_class):
     
 
     @ staticmethod
-    
+
     
     def change_gridliner_tick_decimal_separator(Gridliner, gridline_tick_formating='.2f', axis='y'):  
         

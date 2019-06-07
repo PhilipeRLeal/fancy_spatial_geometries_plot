@@ -20,6 +20,33 @@ import matplotlib
 
 class scale_bar_class(object):
     
+	
+    @ staticmethod
+	
+		
+    def get_central_x_point_from_scalebar_in_fig_coordinates(scalebar):
+        """
+		Function description:
+			The function receives a scale_bar_class.scalebar object and returns its central x position in figure coordinates
+		
+        """
+	
+        fig = scalebar.get_figure()
+        x1, dx1, ty, dty = fig.transFigure.inverted().transform(scalebar.get_bbox_to_anchor()).ravel()
+		
+        x1 = x1 + dx1
+		
+        x2 = ty - x1
+		
+        y1 = ty - dty
+		
+        y2 = dty
+
+        mean = (x1 + x2)/2
+		
+        return mean
+
+	
     @ staticmethod
     def get_local_TransVerse_Mercator_Projection_for_given_geoaxes(ax, x_size_in_degrees):
         """
