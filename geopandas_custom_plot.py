@@ -35,6 +35,64 @@ class geopandas_custom_plot(scale_bar_class):
     
     """
     
+    @ staticmethod
+    
+    def format_axis_ticks(axes, axis, to_string_format='{:2.2e}', decimal_representation=','):
+    
+        import matplotlib.ticker as tick
+    
+        def y_fmt(x, y):
+            return to_string_format.format(x).replace('.', decimal_representation)
+        
+        axes.axis.set_major_formatter(tick.FuncFormatter(y_fmt))
+    
+    @ staticmethod
+    
+    def format_axis_ticks_to_scientific_notation(ax, axis='both'):
+        import matplotlib.ticker as tick
+        
+        def value_to_scientific(x):
+            return '{:2.2e}'.format(x)
+        
+
+        
+        def y_fmt(x, y):
+    
+            v1, v2 = value_to_scientific(x).split('e')
+
+            return r'${0} \times 10^{{{1}}}$'.format(v1, v2) if x !=0 else '0'
+        
+    
+        if axis.lower() == 'both':
+            
+            for i_axis in ['xaxis', 'yaxis']:
+                Axis = getattr(ax, i_axis)
+                Axis.set_major_formatter(tick.FuncFormatter(y_fmt))
+                
+                
+    
+    @ staticmethod
+    
+    def set_number_of_ticks_for_given_axis(axes, N_ticks, axis='both'):
+        
+        if axis.lower() == 'both':
+            axes.xaxis.set_major_locator(plt.MaxNLocator(N_ticks))
+        
+            axes.yaxis.set_major_locator(plt.MaxNLocator(N_ticks))
+            
+        elif axis.lower() == 'x':
+            axes.xaxis.set_major_locator(plt.MaxNLocator(N_ticks))
+        
+        elif axis.lower()=='y':
+            axes.yaxis.set_major_locator(plt.MaxNLocator(N_ticks))
+            
+        elif axis.lower() == 'z':
+            if hasattr(axes, 'zaxis'):
+                axes.zaxis.set_major_locator(plt.MaxNLocator(N_ticks))
+                
+        else:
+            None
+    
 
     @ staticmethod
 
@@ -82,15 +140,14 @@ class geopandas_custom_plot(scale_bar_class):
     
     
     @ staticmethod
-    def add_colorbar_for_axes(geo_axes, gdf, 
-                              column=None,
+    def add_colorbar_for_axes(geo_axes, Vmax, 
+                              Vmin,
                               n_ticks_in_colorbar=4, 
                               shrink=0.95, pad=0.02,
-                              round_float_value_colorbar_tickslabels=2, 
                               cmap='viridis',
-                              alpha=1,
+                              matplotlib_colors_normalize=None,
 							  n_colors_in_cmap=None,
-							  colorbar_tick_fontsize=7, decimal_separator=','):
+							  colorbar_tick_fontsize=7):
 
 
         '''
@@ -109,13 +166,19 @@ class geopandas_custom_plot(scale_bar_class):
 			
 			----------------------------------------------------------------------------------------------
             
-			round_float_value_colorbar_tickslabels: the resolution after the decimal separator to be applied
-			
-			----------------------------------------------------------------------------------------------
-            
 			cmap: the cmap name to be used in the colorbar. The function also accepts a matplotlib.colors.ListedColormap instance, instead of a cmap name.
 			
 			----------------------------------------------------------------------------------------------
+
+            matplotlib_colors_normalize: A matplotlib.colors.Normalize instace. The normalizing object which scales data, typically into the
+                interval ``[0, 1]``.
+                                        
+                If *None*, *norm* defaults to a *colors.Normalize* object which
+                initializes its scaling based on the first data processed.
+                
+                
+            ----------------------------------------------------------------------------------------------
+            
             
 			n_colors_in_cmap: number of colors (discrete intervals) to be used in the colorbar. Only applicable for cmap str instance 
 			
@@ -147,26 +210,25 @@ class geopandas_custom_plot(scale_bar_class):
         else:
             cmap = getattr(mpl.cm, cmap)
         
-        
-        Vmin = gdf[column].min()
-        Vmax = gdf[column].max()
-        
-        Ticks_list, step = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=True)
-        Ticks_list = np.round(Ticks_list,round_float_value_colorbar_tickslabels)
 
+        
+        Ticks_list = np.linspace(Vmin, Vmax, num=n_ticks_in_colorbar, endpoint=True, retstep=False)
+        
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=Vmin,vmax=Vmax))
     
         sm._A = []
         
         fig=geo_axes.get_figure()
-        
+
          
         cbar = fig.colorbar(sm, ax=geo_axes, ticks=Ticks_list, shrink=shrink, pad=pad)   
         
-        Ticks_list = [str(tick).replace('.', decimal_separator) for tick in Ticks_list]
+        geopandas_custom_plot.set_number_of_ticks_for_given_axis(cbar.ax, n_ticks_in_colorbar)
+        
+       
         
         cbar.set_ticklabels(Ticks_list)
-		
+        
         cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
 			
 
@@ -255,12 +317,9 @@ class geopandas_custom_plot(scale_bar_class):
         
         cbar = fig.colorbar(sm, cax=cax)
         
-
-        Ticks_list = [str(tick).replace('.', decimal_separator) for tick in Ticks_list]
-        
-        cbar.set_ticklabels(Ticks_list)
 		
         cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
+        
 			
 
         return cbar
@@ -286,7 +345,9 @@ class geopandas_custom_plot(scale_bar_class):
                               'facecolor':'white',
                               'alpha':0.5,
                               'linewidth':1,
-                              
+                              'vmin':None,
+                              'vmax':None,
+                              'k':None,
                               'legend_kwds':{'fontsize':12, 
                                              'loc':(1.05, 0.5),
                                              'bbox_to_anchor':(0.5, 0., 0.5, 0.5),
@@ -297,8 +358,6 @@ class geopandas_custom_plot(scale_bar_class):
                                              'fancybox':True,
                                              'facecolor':'k',
                                              'edgecolor':'k',
-                                             'title':'HAV',
-                                             'title_fontsize':12,
                                              'borderpad':12,
                                              'borderaxespad':10
                                              },
@@ -309,11 +368,7 @@ class geopandas_custom_plot(scale_bar_class):
                          cmap='viridis',
                          n_colors_in_cmap=5, 
                          
-                         
-                                              
-                         
-                         
-                         
+
                          
                          n_coordinate_ticks={'x_number':6,  'y_number':6},
                          
@@ -386,7 +441,8 @@ class geopandas_custom_plot(scale_bar_class):
                                       'facecolor':'white',
                                       'alpha':0.5,
                                       'linewidth':1,
-                                      
+                                      'vmin':None,
+                                      'vmax':None,
                                       'legend_kwds':{'fontsize':12, 
                                                      'loc':(1.05, 0.5),
                                                      'bbox_to_anchor':(0.5, 0., 0.5, 0.5),
