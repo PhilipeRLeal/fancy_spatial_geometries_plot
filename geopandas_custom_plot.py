@@ -22,10 +22,10 @@ from Functions.Gridline_tick_formatting.gridline_tick_formatters import Longitud
  
 from Functions.Scale_bar.scale_bar_module import scale_bar_class
 
+from Functions.mapclassifier.mapclassifier import matplotlib_custom_schemer
 
 
-
-class geopandas_custom_plot(scale_bar_class):
+class geopandas_custom_plot(scale_bar_class, matplotlib_custom_schemer):
     """
     This is a class that contains several staticmethods for fancy plotting using cartopy.
     
@@ -163,7 +163,7 @@ class geopandas_custom_plot(scale_bar_class):
                               matplotlib_colors_normalize=None,
 							  n_colors_in_cmap=None,
 							  colorbar_tick_fontsize=7,
-                              colorbar_ax_yticks_format='{0:.2f}',
+                              colorbar_ax_yticks_format='%.2f',
                               **fbar_kwds):
 
 
@@ -223,7 +223,7 @@ class geopandas_custom_plot(scale_bar_class):
                         
                         def wrapped_func (x, y, decimal_separator=','):
                             
-                            return geopandas_custom_plot_y_fmt(x, y, decimal_separator=decimal_separator)
+                            return geopandas_custom_plot._y_fmt(x, y, decimal_separator=decimal_separator)
                         
                         formatter = ticker.FuncFormatter( wrapped_func)
                     
@@ -361,7 +361,7 @@ class geopandas_custom_plot(scale_bar_class):
                         
                         def wrapped_func (x, y, decimal_separator=','):
                             
-                            return geopandas_custom_plot_y_fmt(x, y, decimal_separator=decimal_separator)
+                            return geopandas_custom_plot._y_fmt(x, y, decimal_separator=decimal_separator)
                         
                         formatter = ticker.FuncFormatter( wrapped_func)
                     
