@@ -852,10 +852,161 @@ class scale_bar_class(object):
                                                            y1=0.08):
         """
         Parameters:
-            gdf: the geodataframe from which the distance will be evaluated
-            
+
+            ax: the axes that the scalebar will evaluate distance
+
+			--------------------------------------------------------------------------------------------------------------    
+
+			decimal_separator: sets the decimal separator 
+			
+            --------------------------------------------------------------------------------------------------------------    
+
             distance_in_km: the distance that will be used for the scalebar in km units.
-        
+			
+			--------------------------------------------------------------------------------------------------------------    
+
+			distance_measuring_method (string): sets the type of distance measuring system over geodetic (degree) distances
+                    Available options: ['geopy', 'Transverse_mercator_projection']
+                    
+                        Geopy option requires extra parameters for its evaluation which are set by the ellipsoid and distance_method parameters
+                        
+                
+                    Standard: 'geopy'
+					
+			--------------------------------------------------------------------------------------------------------------    
+
+			ellipsoid (string or (3d-tuple)): sets the ellipsoid that will be used for the distance measuring system. WGS-84 garantees standard error distance for all the globe. 
+											  Better precision can be acchieved by local specific Ellipsoid
+			
+				Standard: 'WGS-84'
+				
+				Observation: this parameter is only applicable for distance_measuring_method == 'geopy'
+			
+			--------------------------------------------------------------------------------------------------------------    
+
+			distance_method (string): sets the type of distance measuring system that will be applied over the scalebar. It will convert
+									  degree distance into planar distance.
+									  
+				
+				Available options: ['vincety': most precise
+									'geodetic/geodesic': will converge always
+									'great_circle': commonly used in the literature
+									]
+									
+				Standard: 'vincenty'
+			
+				Observation: this parameter is only applicable for distance_measuring_method == 'geopy'
+			
+			
+			
+			--------------------------------------------------------------------------------------------------------------    
+
+			length_unit (string): The distance unit measurement that will be used in the scalebar. Available options: ['m', 'Km']
+                    If other distance unit measurements are required, add a transformation function from meters to the required unit 
+                    in the attr: "unit_transformation_function"
+
+                    Standard: 'Km'
+                
+                
+            --------------------------------------------------------------------------------------------------------------    
+
+                
+            unit_transformation_function: the function to convert the scale unit into the desired distance measurement unit, 
+				in case that measurement unit is not "km" or 'm'. This passed function must convert meters to the desired unit, 
+				and return the converted value in the desired unit.
+
+				Example of converting a meter to mile: unit_transformation_function = lambda x: x*0,00062137
+
+				Standard: None (so that no transformation is applied)
+				
+				Observation: this parameter is only applicable for distance_measuring_method == 'Transverse_mercator_projection'
+			
+			
+			
+			rounding_value_for_xsize( int): sets the number of decimal cases
+				standard = 0
+		   
+		    --------------------------------------------------------------------------------------------------------------    
+
+			bar_height=0.015, 
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			fill_bar=True, 
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			fill_bar_color='k', 
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			fontproperties = None,
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			label_top=True,
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			loc='center', 
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			pad=0.1, 
+		   
+		   --------------------------------------------------------------------------------------------------------------    
+
+			borderpad=0.1,
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			background_facecolor = (1,1,1,0.5),
+			
+			--------------------------------------------------------------------------------------------------------------    
+
+			face_alpha=1,
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			background_edgecolor = 'k',
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			background_linewidth =1,
+		   
+			--------------------------------------------------------------------------------------------------------------    
+
+			background_edgealpha = 1,
+		   
+		    --------------------------------------------------------------------------------------------------------------    
+
+			background_facealpha =1,
+
+
+			--------------------------------------------------------------------------------------------------------------    
+
+			sep (int): Separation between the label and the size bar, in points
+				Standard = 5
+			--------------------------------------------------------------------------------------------------------------    
+
+			x0, x1 (float): the relative longitudinal positions to be placed the scalebar in figure units.
+				Standard = 0.7, 0.8
+
+			--------------------------------------------------------------------------------------------------------------    
+
+			y0, y1 (float): the relative latitudinal positions to be placed the scalebar in figure units.
+				Standard = 0.02, 0.08
+
+			--------------------------------------------------------------------------------------------------------------    
+			--------------------------------------------------------------------------------------------------------------    
+
+
+            Returns:
+                box that encompasses the scalebar
+
+        """
+
+			
         """
         
         
