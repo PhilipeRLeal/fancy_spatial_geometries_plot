@@ -1004,7 +1004,7 @@ class scale_bar_class(object):
             Returns:
                 box that encompasses the scalebar
 
-        """
+        
 
 			
         """
