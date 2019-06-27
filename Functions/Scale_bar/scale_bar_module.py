@@ -1074,9 +1074,9 @@ if "__main__" == __name__:
     SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
     
     
-    RGS = SHP.loc[SHP.UF_ID=='51']
+    RGS = SHP.loc[SHP.UF_ID=='51'].copy()
     
-    PA = SHP.loc[SHP.UF_ID=='15']
+    PA = SHP.loc[SHP.UF_ID=='15'].copy()
     
      # sirgas 200 polyconic
     
@@ -1113,10 +1113,7 @@ if "__main__" == __name__:
     
     SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
     
-    
-    RGS = SHP.loc[SHP.UF_ID=='51']
-    
-    PA = SHP.loc[SHP.UF_ID=='15']
+
     
     Projection = ccrs.PlateCarree()
     
@@ -1145,53 +1142,12 @@ if "__main__" == __name__:
     
     fig.show()
     
-    
-    # plotando em graus:
-    
-    SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
-    
-    
-    RGS = SHP.loc[SHP.UF_ID=='51']
-    
-    PA = SHP.loc[SHP.UF_ID=='15']
-    
-    Projection = ccrs.PlateCarree()
-    
-    fig, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})
-    
-    
-    PA.plot(ax=ax, transform=Projection)
-    
-    box = scale_bar_class.scalebar_based_on_degree_distance(ax=ax, x_size_in_degrees=3, 
-                                                            pad=0.5,sep=2, borderpad=5, 
-                                                            length_unit='km',
-                                                            background_facecolor='orange',
-                                                            background_edgecolor ='purple',
-                                                            background_facealpha=1,
-                                                            x0=0.4,
-                                                             y0=0.02,
-                                                             x1=1,
-                                                             y1=0.08)
-    
-    
-    Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
-    
-    Gridliner.xlabels_top = False
-    Gridliner.ylabels_right = False
-    
-    
-    fig.show()
-    
-    
+
     
     # plotando em graus em função de uma distância conhecida em km:
     
     SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
-    
-    
-    RGS = SHP.loc[SHP.UF_ID=='51']
-    
-    PA = SHP.loc[SHP.UF_ID=='15']
+
     
     Projection = ccrs.PlateCarree()
     

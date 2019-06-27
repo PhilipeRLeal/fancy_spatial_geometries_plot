@@ -502,66 +502,6 @@ class LatitudeLocator(LongitudeLocator):
     def bin_boundaries(self, vmin, vmax):
         ticks = LongitudeLocator.bin_boundaries(self, vmin, vmax)
         return [t for t in ticks if t >= -90 and t <= 90]
-    
-def set_ticks(ax, 
-              axis='both', 
-              which='major', 
-              labelpad=10, 
-              labelrotation=90, 
-              ticksize=10, 
-              labelsize=12,
-              labelcolor='k',
-              tick_color='k',
-              bottom=True,
-              left=True,
-              right=False,
-              top=False,
-              direction='out',
-              grid_color='k',
-              grid_alpha=0.5,
-              grid_linewidth=0.2,
-              grid_linestyle='-'
-              ):
-    
-    
-    '''
-    axis: ['x', 'y', 'both']
-    which: ['major', 'minor', 'both']
-    labelpad: pad of the label
-    ticksize: the size of the tick lines
-    bottom, top, right, left: allows or denies the tick and ticklabel plotting for that given axis direction
-    
-    
-    
-    '''
-    
-    ax.tick_params(axis=axis, 
-                  which = which, 
-                  pad = labelpad, 
-                  
-                  size = ticksize, 
-                  color = tick_color,
-                  
-                  labelrotation = labelrotation, 
-                  labelsize = labelsize,
-                  labelcolor = labelcolor,
-                  
-                  bottom = bottom,
-                  left = left,
-                  right = right,
-                  top = top,
-                  direction = direction,
-                  grid_color = grid_color,
-                  grid_alpha = grid_alpha,
-                  grid_linewidth = grid_linewidth,
-                  grid_linestyle = grid_linestyle)
-    
-    return ax
-    
-    
-   
-
-
 
 
 if __name__ == '__main__':
@@ -642,18 +582,6 @@ if __name__ == '__main__':
     ax2.xaxis.set_major_formatter(lon_formatter)
     ax2.yaxis.set_major_formatter(lat_formatter)
     
-    
-    
-    
-    for axes in fig.get_axes():
-        set_ticks(ax=axes, axis='x', 
-              which='major', 
-              labelpad=10, 
-              labelrotation=90, 
-              ticksize=2, 
-              labelsize=8,
-              labelcolor='k',
-              tick_color='k',)
 
 
     fig.tight_layout()

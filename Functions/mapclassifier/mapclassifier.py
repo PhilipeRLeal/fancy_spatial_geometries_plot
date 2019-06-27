@@ -64,10 +64,6 @@ if __name__ == "__main__" :
     
     
     
-    
-    
-    
-    
     Municipios = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\Todos_Anos\Municipios_por_Ano_2007_a_2017.shp')
     
     Municipios['Datetime'] = Municipios['Datetime'].apply(pd.to_datetime)
