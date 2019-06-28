@@ -522,12 +522,7 @@ if __name__ == '__main__':
     
     
     projection = ccrs.PlateCarree() # projection.proj4_init
-    
-    Transform = ccrs.Geodetic(globe=ccrs.Globe(ellipse='GRS80'))
-    
-    
-    
-    
+
     
     # formatting ticks:
     
@@ -557,7 +552,7 @@ if __name__ == '__main__':
     lon_formatter = LongitudeFormatter(number_format='.2f', # com duas casas decimais
                                        degree_symbol='',
                                        dateline_direction_label=True,
-                                       west_hemisphere_str=' - Oeste', east_hemisphere_str=' - Leste')
+                                       west_hemisphere_str=' - O', east_hemisphere_str=' - L')
     
     lat_formatter = LatitudeFormatter(number_format='.2f', # com duas casas decimais
                                       degree_symbol='°',
@@ -580,6 +575,13 @@ if __name__ == '__main__':
     
     
     ax2.xaxis.set_major_formatter(lon_formatter)
+    
+    for label in ax2.get_xticklabels():
+        label.set_rotation(45)
+        label.set_ha('right')
+        
+    ax2.tick_params(axis='x', labelrotation=45)
+    
     ax2.yaxis.set_major_formatter(lat_formatter)
     
 

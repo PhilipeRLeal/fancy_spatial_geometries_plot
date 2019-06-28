@@ -43,25 +43,8 @@ if __name__ == "__main__" :
     import cartopy.crs as ccrs
     import matplotlib.pyplot as plt
     import pandas as pd
-    import sys
-    from matplotlib import ticker
     
     import numpy as np
-    
-    sys.path.insert(0,r'C:\Users\lealp\Dropbox\Profissao\Python\OSGEO\OGR_Vetor\Geopandas\custom_plots')
-    
-    from geopandas_custom_plot import geopandas_custom_plot
-    
-    
-    
-            
-    def wrapped_func (x, y, decimal_separator='.'):
-
-        return geopandas_custom_plot._y_fmt(x, y, decimal_separator=decimal_separator)
-
-    formatter = ticker.FuncFormatter( wrapped_func)
-
-    
     
     
     Municipios = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\Todos_Anos\Municipios_por_Ano_2007_a_2017.shp')
@@ -124,8 +107,6 @@ if __name__ == "__main__" :
                                   'fontsize':7.5},
                       
                       categorical=False,
-                      scheme='user_defined',
-                      classification_kwds={'bins':ei},
                       linewidth=0.02,
                       edgecolor='k',
                      facecolor='white')
@@ -133,29 +114,7 @@ if __name__ == "__main__" :
             ax[enum].set_title(str(ano), fontsize=10)
             ax[enum].set_extent((minx,  maxx, miny, maxy))
             
-        
-        
-            if i.startswith('custom'):
-                geopandas_custom_plot.add_colorbar_for_axes(axes=ax[enum], vmin=Temp[column].min(), vmax=Temp[column].max(), 
-                                                            cmap='viridis', colorbar_ax_yticks_format=formatter )
-            
-        
-        geopandas_custom_plot.add_north_Arrow(ax[enum], x_tail=0.96,
-                                                        x_head=0.96, y_tail=0.11, y_head=0.15)
-        
-        geopandas_custom_plot.get_scalebar_with_rounded_kilometer_distance_based(ax=ax[enum],
-                                                                                fill_bar_color='k',
-                                                                                background_facecolor='white',
-                                                                                decimal_separator=',',
-                                                                                distance_in_km=900,
-                                                                                distance_measuring_method='geopy',
-                                                                                ellipsoid='WGS-84',
-                                                                                x0=0.88,
-                                                                                y0=0.9,
-                                                                                x1=1,
-                                                                                y1=0.93,
-                                                                                pad=0.2,
-                                                                                borderpad=0.01,)
+
         
         fig.suptitle('Births per year per Municipality in log scale  with user  defined scheme')
         

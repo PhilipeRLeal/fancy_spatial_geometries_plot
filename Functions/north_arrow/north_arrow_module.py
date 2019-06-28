@@ -8,6 +8,10 @@ Created on Mon May  6 18:53:33 2019
 
 import matplotlib.patches as mpatches
 
+import pandas as pd
+pd.set_option('display.width', 50000)
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
 
 
 def add_north_arrow_to_fig(fig, 

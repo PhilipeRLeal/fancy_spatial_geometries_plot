@@ -9,7 +9,7 @@ Created on Wed Jun 26 19:09:27 2019
 from matplotlib import ticker
 
 
-from geoaxes_locators_and_formatters.locators_and_formatters import LongitudeFormatter, LatitudeFormatter
+from geoaxes_locators_and_formatters.locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
 
 
 class gridline_tick_formatter(object): 
@@ -334,10 +334,3 @@ if '__main__' ==__name__:
     fig.subplots_adjust()
     fig.draw(fig.canvas.get_renderer())
     fig.show()
-    
-    
-
-
-    input('press any key to close figures: \n')
-
-    plt.close(fig)
