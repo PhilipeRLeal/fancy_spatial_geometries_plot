@@ -5,4 +5,4 @@ Created on Mon May 27 09:40:51 2019
 @author: lealp
 """
 
-from . import *
+from .scale_bar_module import *

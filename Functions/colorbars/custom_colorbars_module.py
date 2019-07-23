@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
         
 from matplotlib import ticker
-
+from matplotlib import colorbar
 
 class custom_colorbars():    
     
@@ -153,7 +153,7 @@ class custom_colorbars():
          
          # yaxis
          
-         cbar.ax.yaxis.set_major_formatter(ticker.MaxNLocator(n_ticks_in_colorbar))
+         cbar.ax.yaxis.set_major_locator(ticker.MaxNLocator(n_ticks_in_colorbar))
         
          cbar.ax.tick_params(labelsize=colorbar_tick_fontsize)
     
@@ -328,10 +328,88 @@ class custom_colorbars():
               Axis.set_major_formatter(ticker.FuncFormatter(axis_fmt))
               
           return cbar
+     
+        
+     @ staticmethod
+	
+     def make_cax_for_given_axes(parent_ax, location='right', fraction=0.15, shrink=0.99, **kws):
+          '''
+    		#Description:
+    		
+    			This function creates a cax (a colorbar axes) by borrowing space from the parent axes.
+    			
+    			
+    			
+    			### derived from: https://matplotlib.org/3.1.0/api/colorbar_api.html?highlight=colorbar%20make_axes#matplotlib.colorbar.make_axes
+    		
+    		
+    		#Available parameters are:
+    			
+    			orientation (string): vertical or horizontal
+    			
+    			fraction (float = 0.15): fraction of original axes to use for colorbar
+    			
+    			pad (float): fraction of original axes between colorbar and new image axes
+    				pad = 0.05 if cax is to be vertical; 
+    				pad = 0.15 if cax is to be horizontal; 
+    				
+    			shrink (float = 1.0): fraction by which to multiply the size of the colorbar
+    			
+    			aspect (float = 20): ratio of long to short dimensions
+    			
+    			anchor ( 2D-tuple): the anchor point of the cax from the parent axes
+    				(0.0, 0.5) if cax is to be vertical; 
+    				(0.5, 1.0) if cax is to be horizontal; 
+    			
+    			panchor (2D-tuple):the anchor point of the colorbar parent axes. If False, the parent axes' anchor will be unchanged
+    			
+    				(1.0, 0.5)  if cax is to be vertical; 
+    				(0.5, 0.0) if cax is to be horizontal; 
+    			
+    		
+    		#returns:
+    			cax, cax_kwds
+		
+          '''
+          
+          
+          cax, cax_kwds = colorbar.make_axes(parent_ax, location=location, fraction=fraction, shrink=shrink, **kws) 
+          
+          return cax, cax_kwds
       
+     @ staticmethod
+    
+     def make_legend_kwds_for_geopandas(tick_format=None, 
+                                        bbox_to_anchor=(1.01, 0.5),
+                                        bbox_transform='axes'):
+    
+         if tick_format == None:
+    
+              def y_fmt(x, y):
+                return '{:.2f}'.format(x)
         
+              tick_format = ticker.FuncFormatter(y_fmt)
+            
+         elif callable(tick_format):
         
+              tick_format = ticker.FuncFormatter(tick_format)
+            
+         else:
+              tick_format = tick_format
+            
+            
+         legend_kwds={'bbox_to_anchor':(1.01, 0.5), 
+                     'fontsize':3.5,
+                     'format':tick_format, 
+                     'frameon':True,
+                     'bbox_transform':bbox_transform,
+                     'borderaxespad':10,
+                     'shrink':1}
         
+         return legend_kwds
+
+
+    
 if "__main__" == __name__:
     import geopandas as gpd
     import cartopy.crs as ccrs
@@ -354,9 +432,9 @@ if "__main__" == __name__:
     
     SHP.plot(ax=ax, column='CD_GEOCMU')
     
-    cbar = custom_colorbars.add_colorbar_for_fig(fig=fig, vmin=vmin, vmax=vmax)
+    cbar = custom_colorbars.add_colorbar_for_axes(axes=ax, vmin=vmin, vmax=vmax, n_ticks_in_colorbar=2 )
     
-    custom_colorbars.format_cbar_ticks_to_scientific_notation(cbar, decimal_separator=',')
+    custom_colorbars.format_cbar_ticks_to_scientific_notation(cbar, decimal_separator=',', )
     
     fig.subplots_adjust(top=0.88,
                         bottom=0.18,

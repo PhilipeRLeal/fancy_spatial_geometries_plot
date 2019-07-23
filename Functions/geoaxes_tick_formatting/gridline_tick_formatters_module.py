@@ -8,52 +8,55 @@ Created on Wed Jun 26 19:09:27 2019
 
 from matplotlib import ticker
 
+if '__main__' ==__name__:
+    from locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
+else:
+    from .locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
 
-from geoaxes_locators_and_formatters.locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
+def set_gridline_tick_axis_positions(gridliner , positions = dict(top=False, 
+															   bottom=True, 
+															   left=True, 
+															   right=False)):
+	 
+	 gridliner.xlabels_top = positions['top']
+	 gridliner.xlabels_bottom = positions['bottom']
+	 
+	 gridliner.ylabels_right = positions['right']
+	 gridliner.ylabels_left = positions['left']
+	 
+	 
 
+def set_number_of_ticks_in_Gridliner(nbins, gridliner):
 
-class gridline_tick_formatter(object): 
-     
-    @ staticmethod
+	
+    
+    
+    gridliner.ylocator = ticker.MaxNLocator(nbins)
+    gridliner.xlocator = ticker.MaxNLocator(nbins)
+    
+    return gridliner
 
-    def set_gridline_tick_axis_positions(gridliner , positions = dict(top=False, 
-                                                                   bottom=True, 
-                                                                   left=True, 
-                                                                   right=False)):
-         
-         gridliner.xlabels_top = positions['top']
-         gridliner.xlabels_bottom = positions['bottom']
-         
-         gridliner.ylabels_right = positions['right']
-         gridliner.ylabels_left = positions['left']
-         
-         
+def change_gridline_tick_formating(gridliner, gridline_tick_formating='.2f', axis='yaxis', decimal_separator=',', geographical_symbol='°'):  
+	 
+	 def Format_p(x, counter):
+		
+		 return '{0:{1}}{2}'.format(x, gridline_tick_formating, geographical_symbol).replace('.', decimal_separator)
+	 
+	 if axis.lower() == 'both':
  
-    
-     
-    @ staticmethod
+		 gridliner.xformatter = ticker.FuncFormatter(Format_p)
+		 gridliner.yformatter = ticker.FuncFormatter(Format_p)
+			 
+	 else:
+		 if axis.lower().startswith('x'):
+			 gridliner.xformatter = ticker.FuncFormatter(Format_p)
+		 else:
+			 gridliner.yformatter = ticker.FuncFormatter(Format_p)
+	
+	
+	 return gridliner
 
-    def change_gridline_tick_formating(gridliner, gridline_tick_formating='.2f', axis='yaxis', decimal_separator=','):  
-         
-         def Format_p(x, counter):
-            
-             return '{0:{1}}'.format(x, gridline_tick_formating).replace('.', decimal_separator)
-         
-         if axis.lower() == 'both':
-     
-             gridliner.xformatter = ticker.FuncFormatter(Format_p)
-             gridliner.yformatter = ticker.FuncFormatter(Format_p)
-                 
-         else:
-             if axis.lower().startswith('x'):
-                 gridliner.xformatter = ticker.FuncFormatter(Format_p)
-             else:
-                 gridliner.yformatter = ticker.FuncFormatter(Format_p)
-        
-        
-         return gridliner
-    
-   
+
     
 def add_custom_gridline(geo_axes, 
                     
@@ -63,15 +66,15 @@ def add_custom_gridline(geo_axes,
                                     alpha=0.35, 
                                     linestyle='--'),
                                        
-                       n_coordinate_ticks={'x_number':3,  'y_number':3},
+                        n_coordinate_ticks={'x_number':3,  'y_number':3},
                     
-                        gridline_tick_formating=dict(latitude_tick_formating={'number_format':'.1f', # com duas casas decimais
+                        gridline_tick_formating=dict(latitude_tick_formating={'number_format':'.2f', # com duas casas decimais
                                                               'degree_symbol':'°', # u'\u00B0'
                                                               'north_hemisphere_str': 'N',
                                                               'south_hemisphere_str': 'S'} ,
                                                        
 
-                         longitude_tick_formating={'number_format':'.2f', # com duas casas decimais
+                        longitude_tick_formating={'number_format':'.2f', # com duas casas decimais
                                                                'degree_symbol':'°', # u'\u00B0'
                                                                'dateline_direction_label':True, # ONLY APPLICABLE TO LONGITUDE DATA
                                                                'west_hemisphere_str': 'O',
@@ -95,8 +98,8 @@ def add_custom_gridline(geo_axes,
 												 'ylabels_right':False,
 												 'xlabels_bottom':True}		,
                                 
-                                    tick_decimal_separator='.',										   
-                    
+                        decimal_separator='.',										   
+                        geographical_symbol='°'
                         ):
 
     """
@@ -171,8 +174,8 @@ def add_custom_gridline(geo_axes,
     		
     
     number_format = longitude_tick_formating.get('number_format', '.2f')
-    west_hemisphere_str = longitude_tick_formating.get('west_hemisphere_str', 'O')  
-    east_hemisphere_str = longitude_tick_formating.get('east_hemisphere_str', 'L')  
+    west_hemisphere_str = longitude_tick_formating.get('west_hemisphere_str', 'W')  
+    east_hemisphere_str = longitude_tick_formating.get('east_hemisphere_str', 'E')  
     degree_symbol = longitude_tick_formating.get('degree_symbol', '')
     dateline_direction_label = longitude_tick_formating.get('dateline_direction_label', False)
     
@@ -193,6 +196,13 @@ def add_custom_gridline(geo_axes,
     south_hemisphere_str = latitude_tick_formating.get('south_hemisphere_str', 'S')  
     degree_symbol = latitude_tick_formating.get('degree_symbol', '')
     
+    def Format_p(x, counter):
+		
+        return '{0:{1}}'.format(x, '.2f').replace('.', ',')
+	 
+	 
+ 
+		 
     
     lat_formatter = LatitudeFormatter(number_format=number_format,
                                       degree_symbol=degree_symbol,
@@ -208,8 +218,15 @@ def add_custom_gridline(geo_axes,
     gl.ylabel_style = gridline_ylabel_style
     
     
-    gridline_tick_formatter.change_gridline_tick_formating(gl,  axis='both')
+    change_gridline_tick_formating(gl,  
+                                   gridline_tick_formating=longitude_tick_formating.get('number_format', '.2f'), 
+                                   axis='x', decimal_separator=decimal_separator,
+                                   geographical_symbol=geographical_symbol)
     
+    change_gridline_tick_formating(gl,  
+                                   gridline_tick_formating=latitude_tick_formating.get('number_format', '.2f'), 
+                                   axis='y', decimal_separator=decimal_separator,
+                                   geographical_symbol=geographical_symbol)
        
     
     
@@ -253,11 +270,11 @@ if '__main__' ==__name__:
     
    
     
-    gridline_tick_formatter.change_gridline_tick_formating(Grider,  axis='both')
+    change_gridline_tick_formating(Grider,  axis='both')
     
     
     
-    gridline_tick_formatter.set_gridline_tick_axis_positions(Grider, 
+    set_gridline_tick_axis_positions(Grider, 
                                                              positions={'top': False, 
                                                                         'bottom': True, 
                                                                         'left': True, 

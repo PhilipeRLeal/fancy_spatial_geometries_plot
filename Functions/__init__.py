@@ -7,7 +7,7 @@ Created on Mon May 27 09:40:51 2019
 
 from .colorbars import *
 
-from .geoaxes_tick_formatting import geoaxes_tick_formatters
+from .geoaxes_tick_formatting import geoaxes_tick_formatters_module
 
 from .mapclassifier import *
 
