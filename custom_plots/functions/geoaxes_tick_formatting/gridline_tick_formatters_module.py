@@ -29,8 +29,6 @@ def set_gridline_tick_axis_positions(gridliner , positions = dict(top=False,
 def set_number_of_ticks_in_Gridliner(nbins, gridliner):
 
 	
-    
-    
     gridliner.ylocator = ticker.MaxNLocator(nbins)
     gridliner.xlocator = ticker.MaxNLocator(nbins)
     
@@ -323,9 +321,11 @@ if '__main__' ==__name__:
                                                                        'degree_symbol':'°', # u'\u00B0'
                                                                        'dateline_direction_label':True, # ONLY APPLICABLE TO LONGITUDE DATA
                                                                        'west_hemisphere_str': 'O',
-                                                                       'east_hemisphere_str': 'L'}) ,
+                                                                       'east_hemisphere_str': 'L'}
+                                                                       
+                                                        ) ,
                             
-    							gridline_xlabel_style = {'color': 'black', 
+                            gridline_xlabel_style = {'color': 'black', 
                                                        #'weight': 'bold', 
                                                        'rotation':90,
                                                        'fontsize':12},

@@ -11,7 +11,8 @@
 	
 ## What the package does:
 
-	It contains a set of classes and method which allow easy and fast standardization of geopandas plottings.
+	It contains a set of classes and method which allow easy and 
+    fast standardization of spatial data plottings.
 	
 	These features encompasses:
 	

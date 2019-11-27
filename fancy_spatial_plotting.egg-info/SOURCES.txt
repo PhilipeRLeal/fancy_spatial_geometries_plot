@@ -1,0 +1,16 @@
+.gitignore
+MANIFEST.in
+README.md
+__init__.py
+setup.py
+fancy_spatial_plotting.egg-info/PKG-INFO
+fancy_spatial_plotting.egg-info/SOURCES.txt
+fancy_spatial_plotting.egg-info/dependency_links.txt
+fancy_spatial_plotting.egg-info/not-zip-safe
+fancy_spatial_plotting.egg-info/requires.txt
+fancy_spatial_plotting.egg-info/top_level.txt
+tests/Data_example/MUNICIPIOS_PARA.dbf
+tests/Data_example/MUNICIPIOS_PARA.prj
+tests/Data_example/MUNICIPIOS_PARA.qpj
+tests/Data_example/MUNICIPIOS_PARA.shp
+tests/Data_example/MUNICIPIOS_PARA.shx

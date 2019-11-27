@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun  3 17:09:00 2019
-
-@author: lealp
-"""
-
 
 import matplotlib.pyplot as plt
 
@@ -20,10 +13,8 @@ import matplotlib
 
 class scale_bar_class(object):
     
-	
     @ staticmethod
 	
-		
     def get_central_x_point_from_scalebar_in_fig_coordinates(scalebar):
         """
 		Function description:
@@ -32,19 +23,10 @@ class scale_bar_class(object):
         """
 	
         fig = scalebar.get_figure()
-        x1, dx1, ty, dty = fig.transFigure.inverted().transform(scalebar.get_bbox_to_anchor()).ravel()
+        x1, X2, Y1, Y2 = fig.transFigure.inverted().transform(scalebar.get_bbox_to_anchor()).ravel()
 		
-        x1 = x1 + dx1
 		
-        x2 = ty - x1
-		
-        y1 = ty - dty
-		
-        y2 = dty
-
-        mean = (x1 + x2)/2
-		
-        return mean
+        return (x1 + X2)/2
 
 	
     @ staticmethod
@@ -290,7 +272,6 @@ class scale_bar_class(object):
                                           y0=0.02,
                                           x1=1,
                                           y1=0.08,
-                                          K_times=3,
                                           over_write_distance_metric=False):
         
         """
@@ -460,10 +441,8 @@ class scale_bar_class(object):
 
         """
 
-        if ax.projection != ccrs.PlateCarree():
-            raise ("The axes projection must be the ccrs.PlateCarree() projection in order for this algorithm to work.")
-
-
+        if ax.projection.is_geodetic() == True:
+            raise ValueError("The axes projection must be the ccrs.PlateCarree() projection in order for this algorithm to work.")
 
 
 
@@ -537,6 +516,7 @@ class scale_bar_class(object):
             
         from functools import partial
         
+        
         P_scale_bar_c = partial(scale_bar_class.add_anchored_size_bar, ax=ax,
 														  transform=trans, 
 														  loc=loc,
@@ -553,12 +533,17 @@ class scale_bar_class(object):
 														  bbox_to_anchor=(x0,y0,x1, y1),
 														  bbox_transform=ax.figure.transFigure)
         
-
         Bbox_bar = P_scale_bar_c(fill_bar=True)
-            
+       
+        
 
-        child = HPacker(pad=0.2, sep=0.2, width=0.2, height=0.2, align='baseline', 
-                        mode='fixed', children=[Bbox_bar])
+        child = HPacker(pad=0.2, 
+                        sep=0, 
+                        width=0.2, 
+                        height=0.2, 
+                        align='baseline', 
+                        mode='fixed', 
+                        children=[Bbox_bar])
        
          
         
@@ -1062,26 +1047,14 @@ class scale_bar_class(object):
 
     
 if "__main__" == __name__:
-    
-    try:
-        plt.close('all')
-    except:
-        None
-    
-    
+   
     import geopandas as gpd
     
-    SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
+    PA = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\MUNICIPIOS_PARA.shp')
     
-    
-    RGS = SHP.loc[SHP.UF_ID=='51'].copy()
-    
-    PA = SHP.loc[SHP.UF_ID=='15'].copy()
     
      # sirgas 200 polyconic
     
-    
-    PA.to_crs(epsg=5880, inplace=True)
     
     fig, ax = plt.subplots(1, figsize=(7,6), subplot_kw={'aspect':'equal'})
     
@@ -1111,16 +1084,12 @@ if "__main__" == __name__:
     
     # plotando em graus:
     
-    SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
-    
-
-    
     Projection = ccrs.PlateCarree()
     
     fig, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})
     
     
-    RGS.plot(ax=ax, transform=Projection)
+    PA.plot(ax=ax, transform=Projection)
     
     box = scale_bar_class.scalebar_based_on_degree_distance(ax=ax, x_size_in_degrees=3, 
                                                             pad=0.5,sep=2, borderpad=5, 
@@ -1141,44 +1110,6 @@ if "__main__" == __name__:
     
     
     fig.show()
-    
-
-    
-    # plotando em graus em função de uma distância conhecida em km:
-    
-    SHP = gpd.read_file(r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\BRMUE250GC_SIR.shp')
-
-    
-    Projection = ccrs.PlateCarree()
-    
-    fig, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})
-    
-    
-    RGS.plot(ax=ax, transform=Projection)
-    
-    box = scale_bar_class.get_scalebar_with_rounded_kilometer_distance_based(ax=ax, 
-                                                                             distance_in_km=300, 
-                                                                             length_unit='km',
-                                                                             rounding_value_for_xsize=0,
-                                                                             pad=0.5,sep=2, borderpad=5, 
-                                                                             background_facecolor=(1,1,1,0.5),
-                                                                             background_edgecolor ='purple',
-                                                                             background_facealpha=1,
-                                                                             x0=0.4,
-                                                                             y0=0.02,
-                                                                             x1=0.9,
-                                                                             y1=0.08)
-        
-    
-    Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
-    
-    Gridliner.xlabels_top = False
-    Gridliner.ylabels_right = False
-    
-    
-    
-    fig.show()
-    
     
     
     

@@ -1,0 +1,25 @@
+Metadata-Version: 1.2
+Name: fancy-spatial-plotting
+Version: 0.1
+Summary: This is a package for custom plots that can be used over geopandas, arrays and netcdf files plottings.
+Home-page: https://github.com/PhilipeRLeal/fancy_spatial_geometries_plot
+Author: Philipe Riskalla Leal
+Author-email: leal.philipe@gmail.com
+Maintainer: Philipe Riskalla leal: developer
+Maintainer-email: leal.philipe@gmail.com
+License: MIT license
+Download-URL: TODO
+Description: This is a package for custom plots that can be used over geopandas, arrays and netcdf files plottings.
+Keywords: fancy spatial plot,geopanda,xarray,matplotlib
+Platform: UNKNOWN
+Classifier: Topic :: Education
+Classifier: Topic :: Scientific/Engineering
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Requires-Python: >=3.7

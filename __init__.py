@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  5 14:58:54 2019
+__version__ = '0.1'
 
-@author: lealp
-"""
 
-from .Functions import *
+
+
+from .custom_plots.functions import *
+

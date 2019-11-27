@@ -226,13 +226,9 @@ class custom_colorbars():
                         """
                         
                         
-                        from matplotlib import ticker
+                       
                         
-                        def wrapped_func (x, y, decimal_separator=','):
-                            
-                            return geopandas_custom_plot._y_fmt(x, y, decimal_separator=decimal_separator)
-                        
-                        formatter = ticker.FuncFormatter( wrapped_func)
+                        formatter = custom_colorbars.ticks_to_scientific_notation(decimal_separator='.')
                     
                     
                     
@@ -294,7 +290,7 @@ class custom_colorbars():
     
     
      @ staticmethod
-     def format_cbar_ticks_to_scientific_notation(cbar, axis='both', decimal_separator='.'):
+     def ticks_to_scientific_notation(decimal_separator='.'):
          
           ##################################     
           def value_to_scientific(x):
@@ -311,23 +307,30 @@ class custom_colorbars():
     
     
           ###################################
-     
-          ax = cbar.ax
+          return ticker.FuncFormatter(axis_fmt)
+      
+     @ staticmethod
+      
+     def format_cbar_ticks_to_scientific_notation(cbar, axis='both', decimal_separator='.'):
+          
+           formatter = custom_colorbars.ticks_to_scientific_notation(decimal_separator=decimal_separator)
+          
+           ax = cbar.ax
          
-          if axis.lower() == 'both':
+           if axis.lower() == 'both':
              
-              axis = ['xaxis', 'yaxis']
+               axis = ['xaxis', 'yaxis']
             
-              for i_axis in axis:
-                  Axis = getattr(ax, i_axis)
-                  Axis.set_major_formatter(ticker.FuncFormatter(axis_fmt))
+               for i_axis in axis:
+                   Axis = getattr(ax, i_axis)
+                   Axis.set_major_formatter(formatter)
             
-          else:
+           else:
             
-              Axis = getattr(ax, axis)
-              Axis.set_major_formatter(ticker.FuncFormatter(axis_fmt))
+               Axis = getattr(ax, axis)
+               Axis.set_major_formatter(formatter)
               
-          return cbar
+           return cbar
      
         
      @ staticmethod
