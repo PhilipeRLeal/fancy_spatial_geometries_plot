@@ -1,6 +1,5 @@
 include README.md
-include docs/*.txt
-include gcdistance
-
+include MANIFEST.txt
+include requirements.txt
 
 include tests/Data_example/MUNICIPIOS*
