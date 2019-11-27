@@ -42,9 +42,13 @@ setup_requirements = ['pytest-runner', ]
 test_requirements = ['pytest', ]
 
 
-setup(
+setup(name='fancy spatial plotting',
     author="Philipe Riskalla Leal",
     author_email='leal.philipe@gmail.com',
+    
+    maintainer="Philipe Riskalla leal: developer",
+    maintainer_email='leal.philipe@gmail.com',
+    
     classifiers=[
         'Topic :: Education',  # this line follows the options given by: [1]
         "Topic :: Scientific/Engineering",    # this line follows the options given by: [1]		
@@ -57,38 +61,41 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description=description,
     
-    install_requires=requirements,
-    license="MIT license",
-    
-	
-	python_requires='>=3.7',  # Your supported Python ranges
-    version=Version,
     keywords="fancy spatial plot, geopanda, xarray, matplotlib",
     
-    name='fancy spatial plotting',
+    description='This is a python package for fancy spatial data plotting. \
+                 It can be used along with xarray, numpy arrays, rasterio and geopandas plotting',
     
     long_description=description,
-    maintainer="Philipe Riskalla leal: developer",
-    maintainer_email='leal.philipe@gmail.com',
-    url='https://github.com/PhilipeRLeal/fancy_spatial_geometries_plot',
-    download_url='TODO',
     
+    license="MIT license",
+    
+    version=Version,
+    
+    # Requirements
+    
+    install_requires=requirements,
+    setup_requires=setup_requirements,
+    
+	python_requires='>=3.7',  # Your supported Python ranges
     
     packages=find_packages(include='custom_plots'),
 	
+    package_dir = {'': 'custom_plots'},
     
     include_package_data=True,
-    package_dir = {'custom_plots': 'custom_plots/functions'},
+    package_data={'tests/Data_example': ['Data_example/MUNICIPIOS*']},
     
-    setup_requires=setup_requirements,
+    # Testers:
+    
     test_suite='nose.collector',
     tests_require=['nose'],
     
+    url='https://github.com/PhilipeRLeal/fancy_spatial_geometries_plot',
+    
+    download_url='TODO',
+        
     zip_safe=False,
-    
-    package_data={'tests/Data_example': ['Data_example/MUNICIPIOS*']},
-    
     )
 
