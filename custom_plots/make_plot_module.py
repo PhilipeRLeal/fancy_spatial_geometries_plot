@@ -17,8 +17,14 @@ import matplotlib
 import sys
 import os
 
+sys.path.insert(0,r'C:\Users\lealp\Dropbox\Profissao\Python\OSGEO\OGR_Vetor\Geopandas\custom_plots\custom_plots')
 
-from functions import colorbars, geoaxes_tick_formatting, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder
+from functions import colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder
+
+from functions.geoaxes_tick_formatting.gridline_tick_formatters_module import add_custom_gridline
+
+from functions.zebra_axis_tick import add_zebra
+
 
 custom_cbar = colorbars.custom_colorbars
 
@@ -52,30 +58,64 @@ def add_background(ax):
     
 
 
-def add_north_arrow(fig, xmean):
+def add_north_arrow(fig, xmean, y_tail=0.11, y_head=0.14,):
     north_arrow.add_north_arrow_to_fig(fig=fig, 
                                    x_tail=xmean,
-                                    y_tail=0.11,
+                                    y_tail=y_tail,
                                     x_head=xmean,
-                                    y_head=0.14,)
+                                    y_head=y_head)
 
-def add_gridlines(ax):
-    
-    gridline = geoaxes_tick_formatting.add_custom_gridline(ax,
-                                                           decimal_separator='.',
-                                                           gridline_tick_formating={'latitude_tick_formating': {'number_format': '0.0f', 
-                                                                                                                                     'degree_symbol': '°', 
-                                                                                                                                     'north_hemisphere_str': 'N', 
-                                                                                                                                     'south_hemisphere_str': 'S'}, 
-                                                                                                         
-                                                                                    'longitude_tick_formating': {'number_format': '0.0f', 
-                                                                                                                                     'degree_symbol': '°', 
-                                                                                                                                      'dateline_direction_label': True, 
-                                                                                                                                     'west_hemisphere_str': 'W', 
-                                                                                                                                      'east_hemisphere_str': 'E'}},
+def add_gridlines(ax,
+                  
+                  decimal_separator='.',
+                  
+                  gridline_tick_formating=dict(latitude_tick_formating={'number_format':'.1f', # com duas casas decimais
+                                                                      'degree_symbol':'°', # u'\u00B0'
+                                                                      'north_hemisphere_str': 'N',
+                                                                      'south_hemisphere_str': 'S'} ,
+                                                               
+        
+                                                      longitude_tick_formating={'number_format':'.1f', # com duas casas decimais
+                                                                       'degree_symbol':'°', # u'\u00B0'
+                                                                       'dateline_direction_label':True, # ONLY APPLICABLE TO LONGITUDE DATA
+                                                                       'west_hemisphere_str': 'W',
+                                                                       'east_hemisphere_str': 'E'}
+                                                                       
+                                                        ) ,
+                                           
+                  n_coordinate_ticks={'x_number':4,  'y_number':3},                      
                                                                                 
-                                                            gridline_xlabel_style={'color': 'black', 'rotation': 90, 'fontsize': 7},
-                                                            gridline_ylabel_style={'color': 'black', 'rotation': 0, 'fontsize': 7},)
+                  gridline_xlabel_style={'color': 'black', 'rotation': 90, 'fontsize': 7},
+                  
+                  gridline_ylabel_style={'color': 'black', 'rotation': 0, 'fontsize': 7},
+                  
+                  gridline_attr=dict(draw_labels=True,
+                                               linewidth=1, 
+                                            color='black', 
+                                            alpha=0.35, 
+                                            linestyle='--'),
+                                     
+                  gridline_tick_axis_positions={'xlabels_top':False,
+    												 'ylabels_left':True,
+    												 'ylabels_right':False,
+    												 'xlabels_bottom':True}		,
+                  
+                  
+                  ):
+    
+    
+    gridline = add_custom_gridline(ax,
+                                   gridline_attr= gridline_attr,
+                                   n_coordinate_ticks=n_coordinate_ticks,
+                                   gridline_tick_axis_positions=gridline_tick_axis_positions,
+                                   gridline_tick_formating=gridline_tick_formating,
+                                   gridline_xlabel_style= gridline_xlabel_style,
+                                   gridline_ylabel_style=gridline_ylabel_style)
+    zebra_gridlines={'add':True,
+                                   'pad':2}
+    if zebra_gridlines['add']:
+        add_zebra(gridline, pad=zebra_gridlines['pad'])                      
+
     return gridline
  
 

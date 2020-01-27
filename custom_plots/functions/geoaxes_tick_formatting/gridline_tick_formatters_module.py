@@ -9,6 +9,7 @@ Created on Wed Jun 26 19:09:27 2019
 from matplotlib import ticker
 
 if '__main__' ==__name__:
+    
     from locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
 else:
     from .locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
@@ -208,12 +209,7 @@ def add_custom_gridline(geo_axes,
                                       south_hemisphere_str=south_hemisphere_str)
     
     
-    gl.xformatter = lon_formatter
-    gl.yformatter = lat_formatter
     
-    
-    gl.xlabel_style = gridline_xlabel_style
-    gl.ylabel_style = gridline_ylabel_style
     
     
     change_gridline_tick_formating(gl,  
@@ -227,6 +223,12 @@ def add_custom_gridline(geo_axes,
                                    geographical_symbol=geographical_symbol)
        
     
+    gl.xlabel_style = gridline_xlabel_style
+    gl.ylabel_style = gridline_ylabel_style
+    
+    
+    gl.xformatter = lon_formatter
+    gl.yformatter = lat_formatter
     
     
     return gl
@@ -273,10 +275,10 @@ if '__main__' ==__name__:
     
     
     set_gridline_tick_axis_positions(Grider, 
-                                                             positions={'top': False, 
-                                                                        'bottom': True, 
-                                                                        'left': True, 
-                                                                        'right': False})
+                                     positions={'top': False, 
+                                                'bottom': True, 
+                                                'left': True, 
+                                                'right': False})
     
    
     
@@ -317,11 +319,11 @@ if '__main__' ==__name__:
                                                                       'south_hemisphere_str': 'S'} ,
                                                                
         
-                                                      longitude_tick_formating={'number_format':'.2f', # com duas casas decimais
+                                                        longitude_tick_formating={'number_format':'.2f', # com duas casas decimais
                                                                        'degree_symbol':'°', # u'\u00B0'
                                                                        'dateline_direction_label':True, # ONLY APPLICABLE TO LONGITUDE DATA
-                                                                       'west_hemisphere_str': 'O',
-                                                                       'east_hemisphere_str': 'L'}
+                                                                       'west_hemisphere_str': 'W',
+                                                                       'east_hemisphere_str': 'E'}
                                                                        
                                                         ) ,
                             
@@ -348,6 +350,11 @@ if '__main__' ==__name__:
    
                      
     
-    fig.subplots_adjust()
-    fig.draw(fig.canvas.get_renderer())
+    fig.subplots_adjust(top=0.962,
+                        bottom=0.193,
+                        left=0.025,
+                        right=0.975,
+                        hspace=0.2,
+                        wspace=0.2)
+    
     fig.show()
