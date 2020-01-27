@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 import os
 import glob
 from custom_plots import (scale_bar_class, format_axis_ticks_to_scientific_notation,
-                          add_north_arrow_to_fig)
-                         
-from custom_plots import custom_colorbars               
-
+                          add_north_arrow_to_fig, add_zebra,
+                          custom_colorbars,
+                          add_gridlines)
+                       
 add_colorbar_for_axes = custom_colorbars.add_colorbar_for_axes
 format_cbar_ticks_to_scientific_notation = custom_colorbars.format_cbar_ticks_to_scientific_notation
 
@@ -27,11 +27,27 @@ def get_shp_example():
 
 
 class Tester_custom_plots(TestCase):
+
+    def test_gridline(self):
+        try:
+            gdf = get_shp_example()
+             
+            Projection = ccrs.PlateCarree()
+            
+            fig1, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})
+            
+            gdf.plot(ax=ax, transform=Projection)
+            add_gridlines(ax)
+            
+            self.assertTrue(True) 
+            
+        except:
+            self.assertTrue(False) 
+
     def test_scale_bar(self):
         try:
             gdf = get_shp_example()
-                
-               
+             
             Projection = ccrs.PlateCarree()
             
             fig1, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})

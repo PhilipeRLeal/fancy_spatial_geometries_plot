@@ -26,10 +26,10 @@ def add_north_arrow_to_fig(fig,
         (standard): None == fig.transFigure
     
 
-		Returns:
-		
-			geo_axes
-        
+    Returns:
+    
+        geo_axes
+    
     """
     
     

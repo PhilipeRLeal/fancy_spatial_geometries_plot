@@ -1,13 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug  5 16:56:32 2019
-
-@author: lealp
-"""
 
 import pandas as pd
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -17,17 +9,11 @@ import matplotlib
 import sys
 import os
 
-sys.path.insert(0,r'C:\Users\lealp\Dropbox\Profissao\Python\OSGEO\OGR_Vetor\Geopandas\custom_plots\custom_plots')
 
-from functions import colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder
-
-from functions.geoaxes_tick_formatting.gridline_tick_formatters_module import add_custom_gridline
-
-from functions.zebra_axis_tick import add_zebra
-
+from .functions import (colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder,
+                        add_zebra, add_custom_gridline)
 
 custom_cbar = colorbars.custom_colorbars
-
 
 
 def make_cbars(ax, vmin, vmax, colorbar_ax_yticks_format='%.0f'):

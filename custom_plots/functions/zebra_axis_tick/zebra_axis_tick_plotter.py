@@ -1,16 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 23 13:59:05 2020
-
-@author: lealp
-"""
-
-import pandas as pd
-pd.set_option('display.width', 50000)
-pd.set_option('display.max_rows', 50000)
-pd.set_option('display.max_columns', 5000)
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -61,10 +48,6 @@ def main(projection = ccrs.PlateCarree(), drawlicense=True):
 
     return ax
 
-
-ax = main()
-fig = ax.get_figure()
-gridliner = ax.gridlines(draw_labels=True)
 
 
 def add_zebra(gridliner, pad=1):
@@ -134,11 +117,17 @@ def add_zebra(gridliner, pad=1):
     
         if not (lon0 <=-180 or lon1 >= 180 or lat0>=90 or lat0<=-90):
     
-            ax.set_extent(lon0-pad, lon1+pad, lat0-pad, lat1+pad)
+            ax.set_extent((lon0-pad, lon1+pad, lat0-pad, lat1+pad))
 
-add_zebra(gridliner, pad=2)
+if '__main__' == __name__:
 
-fig.show()
+    ax = main()
+    fig = ax.get_figure()
+    gridliner = ax.gridlines(draw_labels=True)
+
+    add_zebra(gridliner, pad=2)
+
+    fig.show()
 
 
 
