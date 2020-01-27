@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import glob
 from custom_plots import (scale_bar_class, format_axis_ticks_to_scientific_notation,
-                          add_north_arrow_to_fig, add_zebra,
+                          add_north_arrow_to_fig, zebra_ticks,
                           custom_colorbars,
                           add_gridlines)
                        
@@ -43,7 +43,14 @@ class Tester_custom_plots(TestCase):
             
         except:
             self.assertTrue(False) 
-
+            
+    def test_zebra_ticks(self):
+        try:
+            Z = zebra_ticks()
+            self.assertTrue(True) 
+            
+        except:
+            self.assertTrue(False) 
     def test_scale_bar(self):
         try:
             gdf = get_shp_example()

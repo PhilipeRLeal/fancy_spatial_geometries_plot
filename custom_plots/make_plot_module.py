@@ -1,24 +1,20 @@
 
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
 import matplotlib
 
-import sys
-import os
 
+from functions import (custom_colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder,
+                        zebra_ticks, add_custom_gridline)
 
-from .functions import (colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder,
-                        add_zebra, add_custom_gridline)
-
-custom_cbar = colorbars.custom_colorbars
+#custom_cbar = colorbars.custom_colorbars
 
 
 def make_cbars(ax, vmin, vmax, colorbar_ax_yticks_format='%.0f'):
     
-    cbar = custom_cbar.add_colorbar_for_axes(axes=ax, vmax=vmax, vmin=vmin, colorbar_ax_yticks_format=colorbar_ax_yticks_format)
+    cbar = custom_colorbars.add_colorbar_for_axes(axes=ax, vmax=vmax, vmin=vmin, colorbar_ax_yticks_format=colorbar_ax_yticks_format)
     
     return cbar
 
@@ -84,8 +80,10 @@ def add_gridlines(ax,
                   gridline_tick_axis_positions={'xlabels_top':False,
     												 'ylabels_left':True,
     												 'ylabels_right':False,
-    												 'xlabels_bottom':True}		,
+    												 'xlabels_bottom':True},
                   
+                  zebra_gridlines={'add':True,
+                                   'pad':2}
                   
                   ):
     
@@ -97,10 +95,9 @@ def add_gridlines(ax,
                                    gridline_tick_formating=gridline_tick_formating,
                                    gridline_xlabel_style= gridline_xlabel_style,
                                    gridline_ylabel_style=gridline_ylabel_style)
-    zebra_gridlines={'add':True,
-                                   'pad':2}
+    
     if zebra_gridlines['add']:
-        add_zebra(gridline, pad=zebra_gridlines['pad'])                      
+        zebra_ticks(ax, pad=zebra_gridlines['pad'])                      
 
     return gridline
  
@@ -264,4 +261,7 @@ class make_plot():
         fig.show()
 
         return fig, gridline, cbars
+    
+    
+    
     
