@@ -6,8 +6,8 @@ import cartopy.crs as ccrs
 import matplotlib
 
 
-from functions import (custom_colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder,
-                        zebra_ticks, add_custom_gridline)
+from .functions import (custom_colorbars, north_arrow, scale_bar, North_arrow_plus_scale_bar_standard_adder,
+                        add_zebra, add_custom_gridline)
 
 #custom_cbar = colorbars.custom_colorbars
 
@@ -19,11 +19,11 @@ def make_cbars(ax, vmin, vmax, colorbar_ax_yticks_format='%.0f'):
     return cbar
 
 
-def make_fig():
+def make_fig(nrows=2,ncols=2):
     
     Projection = ccrs.PlateCarree()
     
-    fig, ax = plt.subplots(3,4, sharex=True, sharey=True, subplot_kw={'projection':Projection}, figsize=(12,6.5))
+    fig, ax = plt.subplots(nrows,ncols, sharex=True, sharey=True, subplot_kw={'projection':Projection}, figsize=(12,6.5))
     
     return fig, ax
 
@@ -97,7 +97,7 @@ def add_gridlines(ax,
                                    gridline_ylabel_style=gridline_ylabel_style)
     
     if zebra_gridlines['add']:
-        zebra_ticks(ax, pad=zebra_gridlines['pad'])                      
+        add_zebra(gridline, pad=zebra_gridlines['pad'])                      
 
     return gridline
  

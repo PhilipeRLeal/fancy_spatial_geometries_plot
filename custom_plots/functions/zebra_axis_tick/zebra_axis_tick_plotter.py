@@ -44,10 +44,7 @@ class zebra_ticks():
             self.ax = ax
         
         
-        if drawlicense:
-        
-            self.main(drawlicense=drawlicense, pad=pad)
-            # Put a background image on for nice sea rendering.
+        self.main(drawlicense=drawlicense, pad=pad)
     
     def main(self, drawlicense, pad=2):
         self.ax.stock_img()
@@ -250,6 +247,119 @@ class zebra_ticks():
                         
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+
+
+
+
+def add_zebra(gridliner, pad=2):
+    '''
+    Description:
+        
+        This function add a zebra line border around a cartopy's geoaxes.
+        
+        It uses the coordinates tick position to evaluate the zebra blocks.
+    
+    
+    returns (dict): {'horizontal:'horizontal_zebras, 'vertical':vertical_zebras}
+    
+    '''
+    
+    
+    fig = gridliner.axes.get_figure()
+    ax = gridliner.axes
+    fig.canvas.draw()   
+    
+    lon0, lon1, lat0, lat1 = ax.get_extent(crs=ax.projection)
+    
+    ysegs = gridliner.yline_artists[0].get_segments()
+    yticks = [yseg[0,1] for yseg in ysegs]
+    
+    xsegs = gridliner.xline_artists[0].get_segments()
+    xticks = [xseg[0,0] for xseg in xsegs]
+    xticks.append(lon1)
+    
+    i = 0
+    
+    colors_wk = ['white', 'black']
+    
+        
+    horizontal_zebras={'north':[],
+                       'south':[]}
+    
+    
+    vertical_zebras={'east':[],
+                       'west':[]}
+    
+    
+    for lon, position in zip([lon0, lon1 - pad], ['east', 'west']):
+        y0 = xticks[0]
+        for enum, y in enumerate(yticks[1:]):
+            
+            color = colors_wk[i]
+            
+            delta_coor = (y - y0)
+            
+            vertical_rect = mpatches.Rectangle( (lon, y0), pad , delta_coor, 
+                                      transform=ax.transData,edgecolor='k',
+                                      facecolor=color, zorder=1000)
+            
+            vertical_zebras[position].append(vertical_rect)
+            
+            i = 1 - i
+            y0 = y
+            
+            ax.add_patch(vertical_rect)
+
+    
+    
+    
+    for lat, position in zip([lat0, lat1 - pad], ['south', 'north']):
+        x0 = xticks[0]
+        
+        for x in xticks[1:]:
+            
+            color = colors_wk[i]
+            
+            delta_coor = (x - x0)
+            
+            
+            horizontal_rect = mpatches.Rectangle( (x0, lat), delta_coor, pad ,
+                                      transform=ax.transData,
+                                      edgecolor='k',
+                                      facecolor=color, zorder=1000)
+            
+            
+            horizontal_zebras[position].append(horizontal_rect)
+    
+            
+            x0 = x
+            
+            i = 1 - i
+            
+            ax.add_patch(horizontal_rect)
+#                
+#                
+#        collection = UpdatablePatchCollection( (vertical_zebras['east'] + 
+#                                                vertical_zebras['west'] +
+#                                                horizontal_zebras['south'] +
+#                                                horizontal_zebras['north']
+#                                               ), transform=ax.transData
+#                                             )
+#        
+#        ax.add_artist(collection)
+
+    
+    if ax.projection.proj4_params.get('units', 'None') == 'None':
+    
+        if not (lon0 <=-180 or lon1 >= 180 or lat0>=90 or lat0<=-90):
+    
+            ax.set_extent((lon0-pad, 
+                                lon1+pad, 
+                                lat0-pad, 
+                                lat1+pad))
+            
+    return {'horizontal':horizontal_zebras, 
+            'vertical':vertical_zebras}
 
 if '__main__' == __name__:
 
