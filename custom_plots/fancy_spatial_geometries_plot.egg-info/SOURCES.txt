@@ -1,0 +1,15 @@
+MANIFEST.in
+README.md
+requirements.txt
+setup.py
+custom_plots/fancy_spatial_geometries_plot.egg-info/PKG-INFO
+custom_plots/fancy_spatial_geometries_plot.egg-info/SOURCES.txt
+custom_plots/fancy_spatial_geometries_plot.egg-info/dependency_links.txt
+custom_plots/fancy_spatial_geometries_plot.egg-info/not-zip-safe
+custom_plots/fancy_spatial_geometries_plot.egg-info/requires.txt
+custom_plots/fancy_spatial_geometries_plot.egg-info/top_level.txt
+tests/Data_example/MUNICIPIOS_PARA.dbf
+tests/Data_example/MUNICIPIOS_PARA.prj
+tests/Data_example/MUNICIPIOS_PARA.qpj
+tests/Data_example/MUNICIPIOS_PARA.shp
+tests/Data_example/MUNICIPIOS_PARA.shx
