@@ -42,7 +42,7 @@ setup_requirements = ['pytest-runner', ]
 test_requirements = ['pytest', ]
 
 
-setup(name='fancy spatial plotting',
+setup(name='fancy_spatial_geometries_plot',
     author="Philipe Riskalla Leal",
     author_email='leal.philipe@gmail.com',
     
