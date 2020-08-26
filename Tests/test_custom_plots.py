@@ -1,12 +1,13 @@
 
 from unittest import TestCase
-
+from unittest import main
 import geopandas as gpd
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import os
 import glob
-from custom_plots import (scale_bar_class, format_axis_ticks_to_scientific_notation,
+from custom_plots import (scale_bar_class, fancy_scalebar, 
+                          format_axis_ticks_to_scientific_notation,
                           add_north_arrow_to_fig, zebra_ticks,
                           custom_colorbars,
                           add_gridlines)
@@ -51,6 +52,67 @@ class Tester_custom_plots(TestCase):
             
         except:
             self.assertTrue(False) 
+            
+            
+    def test_fancy_scalebar(self):
+    
+        try:
+            
+            gdf = get_shp_example()
+             
+            Projection = ccrs.PlateCarree()
+            
+            fig1, ax = plt.subplots(1, figsize=(6,6), subplot_kw={'projection':Projection})
+            
+         
+            gdf.plot(ax=ax, transform=Projection)
+            
+            scalebar_properties = dict(location=(1.1, 0.1), 
+                                             length=200,
+                                               
+                                             metres_per_unit=1000, 
+                                             unit_name='km',
+                                             tol=0.01, 
+                                             angle=0,
+                                             dy = 0.05,
+                                             max_stripes=5,
+                                             ytick_label_margins = 0.25,
+                                             fontsize= 8,
+                                             font_weight='bold',
+                                             rotation = 45,
+                                             zorder=999,
+                                             paddings = {'xmin':0.3,
+                                                         'xmax':0.3,
+                                                         'ymin':0.3,
+                                                         'ymax':0.3},
+                                
+                                             bbox_kwargs = {'facecolor':'w',
+                                                            'edgecolor':'k',
+                                                            'alpha':0.7}
+                                                            
+                                                            )
+            
+            
+            
+            box = fancy_scalebar(ax=ax, **scalebar_properties)
+            
+            
+            Gridliner = ax.gridlines(crs=Projection, draw_labels=True)
+            
+            Gridliner.xlabels_top = False
+            Gridliner.ylabels_right = False
+            
+            
+            fig1.show()
+        
+            self.assertTrue(True) 
+        except:
+            self.assertTrue(False) 
+            
+            
+        
+                   
+
     def test_scale_bar(self):
         try:
             gdf = get_shp_example()
@@ -165,3 +227,8 @@ class Tester_custom_plots(TestCase):
             self.assertTrue(True) 
         except:
             self.assertTrue(False)
+            
+            
+
+if __name__ == '__main__':
+    main(module='test_module', exit=False)            
