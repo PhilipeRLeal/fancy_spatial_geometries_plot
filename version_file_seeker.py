@@ -1,13 +1,4 @@
 
-"""
-    " ============================================================================
-    " Netrw Directory Listing                                        (netrw v155)
-    "   /home/repl/mortgage_forecasts/__pycache__
-    "   Sorted by      name
-    "   Sort sequence: [\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$
-    "   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special
-
-"""
 
 # This is a module that contains a find_version function which automatically
 # seeks, finds and returns the version of the package.

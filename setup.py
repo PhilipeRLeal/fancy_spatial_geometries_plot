@@ -1,5 +1,8 @@
 
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup, find_packages
 
 from version_file_seeker import find_version
 
@@ -80,9 +83,10 @@ setup(name='fancy_spatial_geometries_plot',
     
 	python_requires='>=3.7',  # Your supported Python ranges
     
-    packages=find_packages(include='custom_plots'),
+    packages=find_packages(#include='custom_plots'
+                          ),
 	
-    package_dir = {'': 'custom_plots'},
+    #package_dir = {'': 'custom_plots'},
     
     include_package_data=True,
     package_data={'tests/Data_example': ['Data_example/MUNICIPIOS*']},
