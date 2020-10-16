@@ -1,6 +1,15 @@
+MANIFEST.in
 README.md
+requirements.txt
 setup.py
+Data_example/MUNICIPIOS_PARA.dbf
+Data_example/MUNICIPIOS_PARA.prj
+Data_example/MUNICIPIOS_PARA.qpj
+Data_example/MUNICIPIOS_PARA.shp
+Data_example/MUNICIPIOS_PARA.shx
+Data_example/__init__.py
 custom_plots/__init__.py
+custom_plots/example_data.py
 custom_plots/make_plot_module.py
 custom_plots/functions/North_arrow_plus_scale_bar_standard_adder.py
 custom_plots/functions/__init__.py
@@ -26,5 +35,3 @@ fancy_spatial_geometries_plot.egg-info/dependency_links.txt
 fancy_spatial_geometries_plot.egg-info/not-zip-safe
 fancy_spatial_geometries_plot.egg-info/requires.txt
 fancy_spatial_geometries_plot.egg-info/top_level.txt
-tests/__init__.py
-tests/test_custom_plots.py

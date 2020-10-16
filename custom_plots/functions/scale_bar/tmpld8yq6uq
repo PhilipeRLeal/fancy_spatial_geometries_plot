@@ -15,6 +15,8 @@ import geopandas as gpd
 
 
 
+
+
 def _axes_to_lonlat(ax, coords):
     """(lon, lat) from axes coordinates."""
     display = ax.transAxes.transform(coords)
@@ -411,6 +413,17 @@ def fancy_scalebar(ax,
 
 
 
+def get_standard_gdf():
+    """ basic function for getting some geographical data in geopandas GeoDataFrame python's instance:
+        An example data can be downloaded from Brazilian IBGE:
+        ref: ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2017/Brasil/BR/br_municipios.zip    
+    """
+    gdf_path = r'C:\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\MUNICIPIOS_PARA.shp'
+
+    return gpd.read_file(gdf_path)
+
+
+
 
 def main(projection = ccrs.PlateCarree(central_longitude=0),
         nticks=4):
@@ -457,9 +470,6 @@ def add_grider(ax, nticks=5):
     
 
 if '__main__' == __name__:
-
-    from fancy_spatial_geometries_plot.custom_plots.example_data import get_standard_gdf
-
 
 
     gdf = get_standard_gdf()

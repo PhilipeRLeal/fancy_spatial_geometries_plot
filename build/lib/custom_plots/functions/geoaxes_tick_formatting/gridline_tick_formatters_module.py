@@ -19,12 +19,13 @@ def set_gridline_tick_axis_positions(gridliner , positions = dict(top=False,
 															   left=True, 
 															   right=False)):
 	 
-	 gridliner.xlabels_top = positions['top']
-	 gridliner.xlabels_bottom = positions['bottom']
+	 gridliner.top_labels  = positions['top']
+	 gridliner.bottom_labels  = positions['bottom']
 	 
-	 gridliner.ylabels_right = positions['right']
-	 gridliner.ylabels_left = positions['left']
+	 gridliner.right_labels  = positions['right']
+	 gridliner.left_labels = positions['left']
 	 
+	 return gridliner
 	 
 
 def set_number_of_ticks_in_Gridliner(nbins, gridliner):
@@ -150,12 +151,15 @@ def add_custom_gridline(geo_axes,
     		
     ## Better set to no standard labeling so to avoid possible overlay of custom and standard labels in geo_axes
     
-    
+    set_gridline_tick_axis_positions(gl , 
+                                     positions = dict(top=gridline_tick_axis_positions['xlabels_top'], 
+													  bottom=gridline_tick_axis_positions['xlabels_bottom'], 
+													  left=gridline_tick_axis_positions['ylabels_left'], 
+													  right=gridline_tick_axis_positions['ylabels_right']
+                                                      )
+                                     )
        
-    gl.xlabels_top = gridline_tick_axis_positions['xlabels_top']
-    gl.ylabels_left = gridline_tick_axis_positions['ylabels_left']
-    gl.ylabels_right= gridline_tick_axis_positions['ylabels_right']
-    gl.xlabels_bottom = gridline_tick_axis_positions['xlabels_bottom']
+
     
     from matplotlib import ticker
     

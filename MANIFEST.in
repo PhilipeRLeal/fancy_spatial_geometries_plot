@@ -2,4 +2,4 @@ include README.md
 include MANIFEST.txt
 include requirements.txt
 
-include tests/Data_example/MUNICIPIOS*
+recursive-include Data_example MUNICIPIOS*

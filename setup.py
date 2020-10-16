@@ -1,4 +1,6 @@
 
+
+import glob
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -44,8 +46,9 @@ setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
 
+package_name = 'fancy_spatial_geometries_plot'
 
-setup(name='fancy_spatial_geometries_plot',
+setup(name=package_name,
     author="Philipe Riskalla Leal",
     author_email='leal.philipe@gmail.com',
     
@@ -83,13 +86,13 @@ setup(name='fancy_spatial_geometries_plot',
     
 	python_requires='>=3.7',  # Your supported Python ranges
     
-    packages=find_packages(#include='custom_plots'
+    packages=find_packages(include=['custom_plots*', 'Data_example*']
                           ),
 	
-    #package_dir = {'': 'custom_plots'},
+    package_dir = {package_name: '{0}/custom_plots'.format(package_name)},
     
     include_package_data=True,
-    package_data={'tests/Data_example': ['Data_example/MUNICIPIOS*']},
+    #package_data={'Data_example': ['Data_example/*']},
     
     # Testers:
     

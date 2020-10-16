@@ -1,7 +1,0 @@
-matplotlib
-numpy
-cartopy
-geopy
-geopandas
-shapely
-pandas

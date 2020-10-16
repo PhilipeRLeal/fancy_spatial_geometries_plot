@@ -13,6 +13,9 @@ import matplotlib.ticker as mticker
 import matplotlib.patches as patches
 import geopandas as gpd
 
+from fancy_spatial_geometries_plot.example_data import get_standard_gdf
+
+
 
 
 def _axes_to_lonlat(ax, coords):
@@ -457,9 +460,6 @@ def add_grider(ax, nticks=5):
     
 
 if '__main__' == __name__:
-
-    from fancy_spatial_geometries_plot.custom_plots.example_data import get_standard_gdf
-
 
 
     gdf = get_standard_gdf()

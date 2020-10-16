@@ -458,7 +458,7 @@ def add_grider(ax, nticks=5):
 
 if '__main__' == __name__:
 
-    from fancy_spatial_geometries_plot.custom_plots.example_data import get_standard_gdf
+    from fancy_spatial_geometries_plot import get_standard_gdf
 
 
 
