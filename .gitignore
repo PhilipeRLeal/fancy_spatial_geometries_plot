@@ -14,3 +14,4 @@ __pycache__
 *.shx
 *.ipynb
 *.ipynb_checkpoints
+*tmp*
