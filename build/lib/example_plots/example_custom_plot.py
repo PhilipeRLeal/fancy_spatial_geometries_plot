@@ -17,9 +17,8 @@ pd.set_option('display.max_columns', 5000)
 import glob
 
 from fancy_spatial_geometries_plot import custom_plots
-from custom_plots import get_standard_gdf
 
-gdf = get_standard_gdf()
+gdf = custom_plots.get_standard_gdf()
 
 
 def wraper_plotting(ax):
