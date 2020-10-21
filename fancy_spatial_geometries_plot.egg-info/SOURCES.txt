@@ -20,6 +20,9 @@ custom_plots/functions/geoaxes_tick_formatting/__init__.py
 custom_plots/functions/geoaxes_tick_formatting/geoaxes_tick_formatters_module.py
 custom_plots/functions/geoaxes_tick_formatting/gridline_tick_formatters_module.py
 custom_plots/functions/geoaxes_tick_formatting/locators_and_formatters_module.py
+custom_plots/functions/geoaxes_tick_formatting/helper_functions/__init__.py
+custom_plots/functions/geoaxes_tick_formatting/helper_functions/geoaxes_tick_formatters_module.py
+custom_plots/functions/geoaxes_tick_formatting/helper_functions/locators_and_formatters_module.py
 custom_plots/functions/mapclassifier/__init__.py
 custom_plots/functions/mapclassifier/mapclassifier_module.py
 custom_plots/functions/north_arrow/__init__.py
@@ -29,6 +32,8 @@ custom_plots/functions/scale_bar/fancy_scalebar_with_axestransData.py
 custom_plots/functions/scale_bar/scale_bar_module.py
 custom_plots/functions/zebra_axis_tick/__init__.py
 custom_plots/functions/zebra_axis_tick/zebra_axis_tick_plotter.py
+example_plots/__init__.py
+example_plots/example_custom_plot.py
 fancy_spatial_geometries_plot.egg-info/PKG-INFO
 fancy_spatial_geometries_plot.egg-info/SOURCES.txt
 fancy_spatial_geometries_plot.egg-info/dependency_links.txt

@@ -86,7 +86,7 @@ setup(name=package_name,
     
 	python_requires='>=3.7',  # Your supported Python ranges
     
-    packages=find_packages(include=['custom_plots*', 'Data_example*']
+    packages=find_packages(include=['custom_plots*', 'Data_example*', 'example_plots*']
                           ),
 	
     package_dir = {package_name: '{0}/custom_plots'.format(package_name)},

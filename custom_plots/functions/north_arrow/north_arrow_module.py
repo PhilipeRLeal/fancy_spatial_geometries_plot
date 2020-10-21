@@ -1,6 +1,5 @@
 
 import matplotlib.patches as mpatches
-
 def add_north_arrow_to_fig(fig, 
                     x_tail = 0.892,
                     y_tail = 0.08,
@@ -33,7 +32,6 @@ def add_north_arrow_to_fig(fig,
     """
     
     
-    
     dx = x_head - x_tail
     dy = y_head - y_tail
 
@@ -52,7 +50,7 @@ def add_north_arrow_to_fig(fig,
 				size=11, 
 				ha='center', 
 				va='center',
-				color='K', 
+				color='black', 
 				transform=transform, 
 				figure=fig)
 

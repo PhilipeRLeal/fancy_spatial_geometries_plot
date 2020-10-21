@@ -42,7 +42,7 @@ def add_north_arrow_with_fancy_scale_bar(ax,
                                             
                                             
     # Adding north arrow:
-    xmean = arrow_properties['mean'] + arrow_properties['arrow_xshift']
+    xmean = arrow_properties['xmean'] + arrow_properties['arrow_xshift']
     
     y0 = arrow_properties['y0'] + arrow_properties['arrow_yshift']
     
@@ -75,15 +75,15 @@ def add_north_arrow_with_old_scale_bar(ax,
                                             arrow_yshift=0.1):
     
     box = scale_bar_class.get_scalebar_with_rounded_kilometer_distance_based(ax=ax, 
-    
-                                                                                                                                             distance_in_km=distance, 
-                                                                                                                                             length_unit=units,
-                                                                                                                                             rounding_value_for_xsize=0,
-                                                                                                                                             pad=0.5,sep=2, borderpad=5, 
-                                                                                                                                             background_facecolor=(1,1,1,0.5),
-                                                                                                                                             background_edgecolor ='k',
-                                                                                                                                             background_facealpha=1,
-                                                                                                                                 x0=x0,
+   
+                                                                            distance_in_km=distance, 
+                                                                            length_unit=units,
+                                                                            rounding_value_for_xsize=0,
+                                                                            pad=0.5,sep=2, borderpad=5, 
+                                                                            background_facecolor=(1,1,1,0.5),
+                                                                            background_edgecolor ='black',
+                                                                            background_facealpha=1,
+                                                                            x0=x0,
                                                                              y0=y0,
                                                                              x1=x1,
                                                                              y1=y1)

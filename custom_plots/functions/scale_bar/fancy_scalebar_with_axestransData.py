@@ -241,7 +241,7 @@ def _add_bbox(ax, list_of_patches, paddings={}, bbox_kwargs={}):
                               zorder=zorder)
 
     ax.add_patch(rect)
-    return ax
+    return ax, rect
 
 
 
@@ -269,7 +269,19 @@ def fancy_scalebar(ax,
     
                  bbox_kwargs = {'facecolor':'w',
                                 'edgecolor':'k',
-                                'alpha':0.7}):
+                                'alpha':0.7},
+                 add_numeric_scale_bar=True,
+                 numeric_scale_bar_kwgs={'x_text_offset':0,
+                                         'y_text_offset':-20,
+                                         'box_x_coord':0.5,
+                                         'box_y_coord':0.01}
+                 ):
+    
+    
+   
+    
+    
+    
     
     ax.get_figure().canvas.draw()
     # Convert all units and types.
@@ -355,7 +367,7 @@ def fancy_scalebar(ax,
     # adding boxes
     
     
-    _add_bbox(ax, 
+    ax, rect = _add_bbox(ax, 
              filled_boxs,
              bbox_kwargs = bbox_kwargs ,
              paddings =paddings)
@@ -408,9 +420,12 @@ def fancy_scalebar(ax,
     ax.get_figure().canvas.draw()
     ax.get_figure().tight_layout() 
 
-
-
-
+    # get rectangle background bbox
+    
+    if add_numeric_scale_bar:
+    
+        _add_numeric_scale_bar(ax, rect, numeric_scale_bar_kwgs, fontprops=font_props)
+    
 
 def main(projection = ccrs.PlateCarree(central_longitude=0),
         nticks=4):
@@ -456,6 +471,108 @@ def add_grider(ax, nticks=5):
     Grider.ylocator = mticker.MaxNLocator(nticks)
     
 
+
+
+from geopy.distance import distance, lonlat
+import geopy
+
+def scale_numeric(ax, inches_to_cm=1/2.54):
+    
+    fig =ax.get_figure()
+    
+    bbox = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    
+    bbox_in_data_coords = ax.get_window_extent().transformed(ax.transData.inverted())
+    
+    
+    dx_fig = bbox.width*inches_to_cm # width in cms
+    
+    
+    # Getting distance:
+    x0, x1, y0, y1 = ax.get_extent()    
+    
+    proj4_params = ax.projection.proj4_params
+    
+    units = proj4_params.get('units', None)
+    # if ax projection is a projected crs:
+    if units is not None:
+        dx_mapa = x1 - x0
+        
+    
+    # in case it is not a projected crs (i.e.: PlateCarree):
+    else:
+        
+        lon_min = x0
+        lat_mean = np.mean([y0, y1])
+        
+        
+        # Define starting point.
+        start = geopy.Point(lonlat(lon_min, lat_mean))
+        
+        delta_x = bbox_in_data_coords.width # in degrees
+        
+        end = geopy.Point(lonlat(lon_min + delta_x , lat_mean))
+        try:
+            # by defining the ellipsoid
+            ellips= ax.projection.globe.ellipse
+            
+            if ellips == 'WGS84':
+                ellips = 'WGS-84'
+            elif ellips == 'GRS80':
+                ellips = 'GRS-80'
+            elif ellips == 'GRS67':
+                ellips = 'GRS-67'
+            
+            dx_mapa = distance(start, end, ellipsoid=ellips).m* 1e2 # meters to cm
+        
+        except:
+            print('Non ellipse was defined. Resorting to the standard wgs84 for distance evaluation')
+            # without defining the ellipsod
+            dx_mapa = distance(start, end, ellipsoid=ax.projection.globe.ellipse).m* 1e2 # meters to cm
+        
+        print('distance in x: ', dx_mapa)
+        
+    # updating dx_mapa, so that it will always be [1 in fig cm: dx_mapa cm]
+    dx_mapa = dx_mapa/dx_fig
+    
+    return dx_fig, dx_mapa/10 # dividing by 10... It fix the error found by comparing with Qgis (why?)
+    
+def _add_numeric_scale_bar(ax, patch, numeric_scale_bar_kwgs, fontprops=None):
+    
+    if fontprops == None:
+        fontprops = mfonts.FontProperties(size=8,
+                                           weight='bold')
+    
+    
+    dx_fig, dx_mapa = scale_numeric(ax)
+    
+    
+    rx, ry = patch.get_xy()
+    #cy = ry + patch.get_height()/2.0
+    
+    
+    xytext = (numeric_scale_bar_kwgs['x_text_offset'], 
+              numeric_scale_bar_kwgs['y_text_offset']
+              )
+    
+    xy = (numeric_scale_bar_kwgs['box_x_coord'], 
+              numeric_scale_bar_kwgs['box_y_coord']
+              )
+    
+    
+    
+    ax.annotate('1:{0:.0f}'.format(dx_mapa), 
+                xy=xy, 
+                xytext = xytext,
+                color='black', 
+                weight='bold', 
+                zorder=patch.zorder+1,
+                xycoords =patch,
+                textcoords ='offset points',
+                font_properties=fontprops, 
+                ha='center', va='center')
+
+
 if '__main__' == __name__:
 
     from fancy_spatial_geometries_plot.custom_plots.example_data import get_standard_gdf
@@ -464,23 +581,23 @@ if '__main__' == __name__:
 
     gdf = get_standard_gdf()
 
-
-    fig, axes = main(ccrs.Mercator(central_longitude=-45, ))
-
-
-    for ax in axes:
-        minx, miny, maxx, maxy = gdf.total_bounds
-        
-        dx = (maxx - minx) * 0.1
-        dy = (maxy - miny) * 0.1
-        gdf.plot(ax=ax, transform=ccrs.PlateCarree())
-        
-        ax.set_extent((minx - dx, maxx + dx, miny- dy, maxy + dy), crs=ccrs.PlateCarree())
-        
-        fancy_scalebar(ax, location=(1.1, 0.5), max_stripes=3,
-                       length=200, paddings={'xmin': 0.15, 'xmax': 0.15, 'ymin': 0.8, 'ymax': 0.4})
-        
-        
+    for projection in [ccrs.PlateCarree(), ccrs.Mercator()]:
+        fig, axes = main(projection)
+    
+    
+        for ax in axes:
+            minx, miny, maxx, maxy = gdf.total_bounds
+            
+            dx = (maxx - minx) * 0.1
+            dy = (maxy - miny) * 0.1
+            gdf.plot(ax=ax, transform=ccrs.PlateCarree())
+            
+            ax.set_extent((minx - dx, maxx + dx, miny- dy, maxy + dy), crs=ccrs.PlateCarree())
+            
+            fancy_scalebar(ax, location=(1.1, 0.5), max_stripes=3,
+                           length=200, paddings={'xmin': 0.15, 'xmax': 0.15, 'ymin': 0.8, 'ymax': 0.4})
+            
+            
 
 
 

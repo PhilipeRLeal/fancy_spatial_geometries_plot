@@ -8,11 +8,8 @@ Created on Wed Jun 26 19:09:27 2019
 
 from matplotlib import ticker
 
-if '__main__' ==__name__:
-    
-    from locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
-else:
-    from .locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
+from .helper_functions.locators_and_formatters_module import LongitudeFormatter, LatitudeFormatter
+
 
 def set_gridline_tick_axis_positions(gridliner , positions = dict(top=False, 
 															   bottom=True, 
@@ -151,14 +148,6 @@ def add_custom_gridline(geo_axes,
     		
     ## Better set to no standard labeling so to avoid possible overlay of custom and standard labels in geo_axes
     
-    set_gridline_tick_axis_positions(gl , 
-                                     positions = dict(top=gridline_tick_axis_positions['xlabels_top'], 
-													  bottom=gridline_tick_axis_positions['xlabels_bottom'], 
-													  left=gridline_tick_axis_positions['ylabels_left'], 
-													  right=gridline_tick_axis_positions['ylabels_right']
-                                                      )
-                                     )
-       
 
     
     from matplotlib import ticker
@@ -167,6 +156,17 @@ def add_custom_gridline(geo_axes,
     gl.ylocator = ticker.MaxNLocator(nbins=n_coordinate_ticks['y_number'])
     gl.xlocator = ticker.MaxNLocator(nbins=n_coordinate_ticks['x_number'])
     
+    
+    
+    
+    set_gridline_tick_axis_positions(gl , 
+                                     positions = dict(top=gridline_tick_axis_positions['xlabels_top'], 
+													  bottom=gridline_tick_axis_positions['xlabels_bottom'], 
+													  left=gridline_tick_axis_positions['ylabels_left'], 
+													  right=gridline_tick_axis_positions['ylabels_right']
+                                                      )
+                                     )
+       
     
     # Formater do gridline
     
@@ -248,13 +248,12 @@ if '__main__' ==__name__:
     
     import matplotlib.pyplot as plt
     
-    import geopandas as gpd
     import cartopy.crs as ccrs
     
+    from fancy_spatial_geometries_plot.custom_plots import get_standard_gdf
+    #SHP_path = r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\MUNICIPIOS_PARA.shp'
     
-    SHP_path = r'F:\Philipe\Doutorado\BD\IBGE\IBGE_Estruturas_cartograficas_Brasil\2017\Unidades_Censitarias\Municipios\MUNICIPIOS_PARA.shp'
-    
-    SHP = gpd.read_file(SHP_path)
+    SHP = get_standard_gdf()
     
     SHP['CD_GEOCMU'] = SHP['CD_GEOCMU'].apply(int)
     
