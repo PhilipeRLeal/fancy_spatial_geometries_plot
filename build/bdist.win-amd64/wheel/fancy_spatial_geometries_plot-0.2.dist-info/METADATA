@@ -1,0 +1,35 @@
+Metadata-Version: 2.1
+Name: fancy-spatial-geometries-plot
+Version: 0.2
+Summary: This is a python package for fancy spatial data plotting.                  It can be used along with xarray, numpy arrays, rasterio and geopandas plotting
+Home-page: https://github.com/PhilipeRLeal/fancy_spatial_geometries_plot
+Author: Philipe Riskalla Leal
+Author-email: leal.philipe@gmail.com
+Maintainer: Philipe Riskalla leal: developer
+Maintainer-email: leal.philipe@gmail.com
+License: MIT license
+Download-URL: TODO
+Keywords: fancy spatial plot,geopanda,xarray,matplotlib
+Platform: UNKNOWN
+Classifier: Topic :: Education
+Classifier: Topic :: Scientific/Engineering
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Requires-Python: >=3.7
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: cartopy
+Requires-Dist: geopy
+Requires-Dist: geopandas
+Requires-Dist: shapely
+Requires-Dist: pandas
+
+This is a package for custom plots that can be used over geopandas, arrays and netcdf files plottings.
+
+
