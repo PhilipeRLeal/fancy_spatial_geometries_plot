@@ -1,3 +1,0 @@
-Data_example
-custom_plots
-example_plots
