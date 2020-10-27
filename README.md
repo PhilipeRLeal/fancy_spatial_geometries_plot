@@ -1,3 +1,8 @@
+# This package moved to https://github.com/PhilipeRLeal/fancy_cartopy_plot.git
+
+# Notice:
+Further modifications will be made in this new git repository
+
 # main description of the package:
 
 ## Libraries required:
